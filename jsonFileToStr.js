@@ -1,13 +1,13 @@
 var fs = require('fs')
-fs.readFile('page.js',"utf-8", function(err, data){
-    console.log(data)
+fs.readFile('mockdata.js',"utf-8", function(err, data){
     var obj = eval(data)
     var str = JSON.stringify(obj)
-    fs.writeFile('mockdata.json', str, function(err, data){
+    var result = 'mockdata.json'
+    fs.writeFile(result, str, function(err, data){
         if( err ) {
             console.error(err) 
             return 
         } 
-        console.log('success to write result.js ')
+        console.log('success to write', result)
     }) 
 })
