@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+	<meta charset="UTF-8">
+	<title>店员管理</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no, email=no" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telphone=no, email=no" />
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="HandheldFriendly" content="true">
+	<meta name="MobileOptimized" content="320">
+	<meta name="screen-orientation" content="portrait">
+	<meta name="x5-orientation" content="portrait">
+	<meta name="full-screen" content="yes">
+	<meta name="x5-fullscreen" content="true">
+	<meta name="browsermode" content="application">
+	<meta name="x5-page-mode" content="app">
+	<meta name="msapplication-tap-highlight" content="no">
+	<link rel="stylesheet" href="js/dropload.css">
+	<link rel="stylesheet" href="css/clerk_management.css" />
+	<script type="text/javascript" src="js/template.js"></script>
+	<script type="text/javascript" src="js/director.min.js"></script>
+	
+</head>
+<body class="bg_efe">
+	<div id="content"></div>
+	<script id="js-clerk_list" type="text/html">
+		<div class="date-select">
+			<label class="lbl">时间:</label>
+			<select class="select">
+				{{ each time as item i }}
+				<option value="{{item.value}}">{{item.text}}</option>
+				{{/each}}
+			</select>
+		</div>
+		{{ each main as group i }}
+			<div class="list-title">{{ main[i].title }}</div>
+			{{ if main[i].eleId }}
+			<ul id="list" class="list user_list">
+			{{ else }}
+			<ul class="list user_list">
+			{{ /if}}
+			    {{each main[i].clerk_list as entry i}}
+					<li class="item">
+						<div class="btn_edit">编辑资料</div>
+						<div class="btn_del">删除</div>
+						<a href="#/details" class="clerk-item">
+							<span class="name">{{ entry.name }}</span>
+							<p class="item-bottom">
+								<span class="order_num icons">{{ entry.order_num }}笔</span>
+								<span class="money_num icons">{{ entry.money_num }}元</span>
+							</p>
+						</a>
+					</li>
+			    {{/each}}
+			</ul>
+	    {{/each}}
+	    <div class="warm-tips">
+	    	<i class="warm-tips-txt">扫描店长的桌牌进行支付，店员收不到消息的</i>
+	    	<i class="icons ico-bulbs"></i>
+    	</div>
+	</script>
+	<script id="js-clerk_details_top" type="text/html">
+		<ul class="list user_list user_list_details">
+			<li class="item">
+				<div class="btn_edit">编辑资料</div>
+				<div class="btn_del">删除</div>
+				<a href="javascript:;">
+					<span class="name">{{ entry.name }}</span>
+					<p class="item-bottom">
+						<span class="order_num icons">{{ entry.order_num }}笔</span>
+						<span class="money_num icons">{{ entry.money_num }}元</span>
+					</p>
+				</a>
+			</li>
+	    </ul>
+	</script>
+	<script id="js-clerk_details_list" type="text/html">
+		{{each main as entry i}}
+			<div class="listview clerk-details-list">
+				<div class="mon">
+					<p class="time">{{ entry.date }}</p>
+					<p>实收金额：<span class="font-num">¥{{ entry.num1 }}</span></p>
+				</div>
+				{{each main[i].details as item}}
+					<div class="list-item">
+						<div class="l">
+							<div class="l-name">[当面付]订单金额¥{{ item.num2 }}，商家优惠¥{{ item.num3 }}</div>
+							<div class="l-time">
+								<p>{{ item.time }}</p>
+							</div>
+						</div>
+						<div class="r">¥{{ item.num4 }}</div>	
+					</div>
+				{{/each}}
+			</div>
+		{{/each}}
+   		<div id="navigation"><a href="mockData.json?page=1"></a></div>
+	</script>
+	<script id="js-clerk_details" type="text/html">
+		{{include 'js-clerk_details_top'}}
+		<div id="masonny-div">
+			{{include 'js-clerk_details_list'}}
+		</div>
+	</script>
+	
+	<!-- <div>
+		<a id="js_add_user" class="add_user" href="javascript:;">添加账号</a>
+	</div> -->
+	<div class="loading"></div>
+    <!-- <div id="navigation"><a href="page.html?page=1"></a></div> -->
+	<div id="js_muck" class="layer">
+		<div class="tipbox">
+			<div class="ico-header"> <img src="img/userpho.png" class="userpho"> </div>
+			<button id="js_closeMsg" class="bg_icon1 close"></button>
+			<div class="clear"></div>
+			<h1 class="tip-name">报告老板</h1>
+			<div class="bg_icon1 coner"></div>
+			<p class="p" id="msg">消息内容</p>
+			<div id="single_btn" class="single_btn">
+				<button class="btn btn-normal"></button>
+			</div>
+			<div id="double_btn" class="double_btn">
+				<button class="btn btn-cancel" onclick="hideMsg()">取消</button>
+				<button id="js_del" class="btn btn-ok" onclick="hideMsg()">删除</button>
+			</div>
+			
+		</div>
+	</div>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/etouch1.0.js"></script>
+	<script src="js/jquery-infinite-scroll/jquery.infinitescroll.js" type="text/javascript"></script>
+	<script type="text/javascript">
+		var clerk_list_data = {
+			time: [
+				{
+					text: '今日',
+					value: new Date()
+				},
+				{
+					text: '最近7日',
+					value: ''
+				},
+				{
+					text: '最近30日',
+					value: ''
+				}
+			],
+		    main: [
+		    	{
+		    		title: '店员',
+		    		eleId: true,
+		    		clerk_list: [
+			    		{
+			    			name: '王二',
+			    			order_num: 23,
+			    			money_num: 232.22
+			    		},
+			    		{
+			    			name: '风清扬',
+			    			order_num: 13,
+			    			money_num: 12.02	
+			    		} 
+		    		]
+		    	},
+		    	{
+		    		title: '其他',
+		    		eleId: false,
+		    		clerk_list: [
+			    		{
+			    			name: '店长订单',
+			    			order_num: 20,
+			    			money_num: 152.22
+			    		},
+			    		{
+			    			name: '微信店铺订单',
+			    			order_num: 43,
+			    			money_num: 212.02	
+			    		} 
+		    		]
+		    	}
+		    ]
+		};
+		var clerk_list_html = template('js-clerk_list', clerk_list_data);
+		document.getElementById('content').innerHTML = clerk_list_html;
+
+		var clerk_details_data = {
+			entry: {
+				name: '王二',
+				order_num: '12',
+				money_num: '123'
+			},
+			main: [
+				{
+					date: '2016年03月12日',
+					num1: '232', //金额总数
+					details: [
+						{
+							num1: '232', //金额总数
+							num2: '25', //订单金额
+							num3: '0.4', //商家优惠
+							num4: '123', //实收金额
+							time: '14:42:23'
+						},
+						{
+							num1: '333', //金额总数
+							num2: '15', //订单金额
+							num3: '0.14', //商家优惠
+							num4: '113', //实收金额
+							time: '14:32:23'
+						}
+					]
+				},
+				{
+					date: '2016年03月11日',
+					num1: '132', //金额总数
+					details: [
+						{
+							num1: '132', //金额总数
+							num2: '15', //订单金额
+							num3: '10.4', //商家优惠
+							num4: '233', //实收金额
+							time: '10:42:23'
+						},
+						{
+							num1: '333', //金额总数
+							num2: '15', //订单金额
+							num3: '0.14', //商家优惠
+							num4: '443', //实收金额
+							time: '14:32:23'
+						}
+					]
+				},
+				{
+					date: '2016年03月10日',
+					num1: '132', //金额总数
+					details: [
+						{
+							num1: '333', //金额总数
+							num2: '15', //订单金额
+							num3: '0.14', //商家优惠
+							num4: '443', //实收金额
+							time: '14:32:23'
+						}
+					]
+				}
+			]
+		};
+		var clerk_details_html = template('js-clerk_details', clerk_details_data);
+		
+
+	</script>
+
+	<script type="text/javascript">
+		var list = function () { 
+			//TODO
+			// ajax 
+			// template
+
+			document.getElementById('content').innerHTML = clerk_list_html;
+		};
+
+		var details = function () { 
+			document.getElementById('content').innerHTML = clerk_details_html;
+			$('#masonny-div').infinitescroll({
+	            navSelector  : "#navigation",   // 页面分页元素(成功后会被隐藏)
+	            nextSelector : "#navigation a", // 需要点击的下一页链接，和2的html要对应
+	            itemSelector : ".clerk-details-list"  , // ajax回来之后，每一项的selecter
+	                                      //（比如每篇文章都有item这个class）
+	            debug: true, //启用调试信息
+	            animate: false, //当有新数据加载进来的时候，页面是否有动画效果，默认没有
+	            extraScrollPx: 150, //滚动条距离底部多少像素的时候开始加载，默认150
+	            bufferPx: 40, //载入信息的显示时间，时间越大，载入信息显示时间越短
+	            errorCallback: function(errorType) {
+	            	if( errorType === 'done'){
+
+	            		//TODO 
+	            		// finish 
+	            	}
+	                // alert('error:'+errorType);
+	            }, //当出错的时候，比如404页面的时候执行的函数
+	            localMode: true, //是否允许载入具有相同函数的页面，默认为false
+	            dataType: 'json',//可以是json
+				template: function(data) {
+				//data表示服务端返回的json格式数据，这里需要把data转换成瀑布流块的html格式，然后返回给回到函数
+					// return data;
+					var html = template('js-clerk_details_list',data);
+					document.getElementById('content').innerHTML += html;
+               	},
+	            loading: {
+	                img: "img/loading.gif",
+	                msgText: "",
+	                finishedMsg: '没有更多记录了',
+	                selector: '.loading' // 显示loading信息的div
+	            }
+	        },function(newElems) {
+	            //程序执行完的回调函数
+
+	        })
+		};
+
+		var routes = {
+			'/list': list,
+			'/details': details
+		}
+		var router = Router(routes);
+
+		router.init(['/list']);
+	</script>
+	
+	<script>
+	    var nowX = 0;
+	    var flag = null;
+	    var idx = null;
+	    var user_id;
+	    $("#list").on("touchstart", "a", function (e) {
+	        idx = $(this).parent().index();
+	    });
+	    etouch("#list", "div", function (e) {
+	       e.stopPropagation();
+	       showMsg("删店员账号后，店员将不可再使用<br>该账号登陆店铺，确认删除吗？",2);
+			user_id = $(this).parent();
+			$('#js_del').click(function(e){
+		       e.stopPropagation();
+				user_id.remove();
+			});
+	    });
+	    $("body").on("touchstart","#list a", function () {
+	        var i = $("#list li a.on").parent().index();
+	        $("#list a.on").removeClass('on');
+	        $("#list a").eq(i).css({'-webkit-transform':'translate3d(0,0,0)','-webkit-transition':'all .2s ease'});
+	        setTimeout(function() {
+	            $("#list a").eq(i).css({'-webkit-transition':'none'});
+	        },210);
+	    });
+	    $("body").on("touchend","#list a", function () {
+	        if(flag == 1) {
+	            $("#list a").eq(idx).addClass('on');
+	        } else if(flag == 2) {
+	            $("#list a").eq(idx).removeClass('on');
+	            $("#list a").eq(idx).css({'-webkit-transform':'translate3d(0,0,0)','-webkit-transition':'all .2s ease'});
+	            setTimeout(function() {
+	                $("#list a").eq(idx).css({'-webkit-transition':'none'});
+	            },210);
+	        }
+	    });
+	    etouch("#list", "a", function () {
+	    }).on('swiper',function(e,touch) {
+	        var _this = this;
+	        if (touch.distanceX < 0) {
+	            if(touch.distanceX < -30) {
+	                flag = 1;
+	            } else {
+	                flag = 2;
+	            }
+	            $(_this).css("-webkit-transform",'translate3d('+ touch.distanceX +'px,0,0)');
+	        } else {
+	            touch.distanceX > 15 ? touch.distanceX = 15 : touch.distanceX;
+	            $(_this).css("-webkit-transform",'translate3d('+ touch.distanceX +'px,0,0)');
+	        }
+
+	    }).on('left',function(e,touch) {
+	        var _this = this;
+	        if(flag == 1) {
+	            $(_this).addClass('on');
+	        } else if(flag == 2) {
+	            $(_this).removeClass('on');
+	            $(_this).css({'-webkit-transform':'translate3d(0,0,0)','-webkit-transition':'all .2s ease'});
+	            setTimeout(function() {
+	                $(_this).css({'-webkit-transition':'none'});
+	            },210);
+	        }
+	        flag = null;
+	    }).on('right',function(e,touch) {
+	        $(this).css({'-webkit-transform':'translate3d(0,0,0)','-webkit-transition':'all .2s cubic-bezier(0.66, 0.06, 0.43, 1.33)'});
+	        setTimeout(function() {
+	            $(this).css({'-webkit-transition':'none'});
+	        },210);
+	        flag = null;
+	    });
+
+	    function hideMsg(){
+	    	$('#js_muck').hide();
+	    	$('li a').removeClass('on').css({'-webkit-transform':'translate3d(0,0,0)','-webkit-transition':'all .2s ease'});
+	    }
+	    $('#js_closeMsg').click(hideMsg);
+
+	    // $('body').click(function(){
+	    // 	$('li a').removeClass('on').css({'-webkit-transform':'translate3d(0,0,0)','-webkit-transition':'all .2s ease'});
+	    // })
+	    $('#js_add_user').click(function(){
+	    	if($('#list li').length >= 2 ) {
+	    		showMsg('开通VIP，拥有更多帐号特权喔！',1,'马上开通');
+	    	}else {
+	    		// window.location= ''
+	    	}
+	    });
+	    function showMsg(msg,length,btnName){
+	    	$('#js_muck').show();
+	    	$('#single_btn,#double_btn').hide();
+	    	if(length == 1){
+		    	$('#single_btn').show();
+		    	$('#single_btn .btn-normal').text(btnName);
+	    	}
+	    	if(length == 2){
+		    	$('#double_btn').show();
+	    	}
+	    	$('#msg').html(msg);
+	    }
+
+	    $(function(){
+	    	
+	    });
+	</script>
+
+</body>
+</html>

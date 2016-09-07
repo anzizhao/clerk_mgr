@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+	<meta charset="UTF-8">
+	<title>新增店员帐号</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no, email=no" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telphone=no, email=no" />
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="HandheldFriendly" content="true">
+	<meta name="MobileOptimized" content="320">
+	<meta name="screen-orientation" content="portrait">
+	<meta name="x5-orientation" content="portrait">
+	<meta name="full-screen" content="yes">
+	<meta name="x5-fullscreen" content="true">
+	<meta name="browsermode" content="application">
+	<meta name="x5-page-mode" content="app">
+	<meta name="msapplication-tap-highlight" content="no">
+	<link rel="stylesheet" href="css/clerk_management.css" />
+	<style type="text/css">
+		html {
+			min-height: 100%;
+			position: relative;
+		}
+	</style>
+</head>
+<body class="bg_efe">
+	<form action="">
+		 <ul class="add_user_form">
+            <li><label>店&#12288;员：</label><input class="input_s1" type="text" placeholder="姓名" value="王二" disabled></li>
+            <li><label>手&#12288;机：</label><input class="input_s1" type="tel" placeholder="请输入手机号" value="13264375432" disabled></li>
+            <li><label>旧密码：</label><input class="input_s1" type="password" placeholder="请输入旧密码"></li>
+            <li><label>新密码：</label><input id="txt_pwd" class="input_s1" type="password" placeholder="请输入新密码"><span id="ico_pwd_display" class="ico_pwd_display"></span></li>
+        </ul>
+        <p class="tip">
+        	<span class="tip_error">错误信息</span>
+			<span id="ico_bulb" class="ico_bulb"></span>
+        </p>
+     	<div class="btn_group">
+			<a href="javascript:;" class="btn btn_save">保存</a>
+		</div>
+	</form>
+	<a class="link_power_set" href="权限设置.html">设置权限</a>
+	<div id="muck" class="muck">
+		<div class="muck-content">
+			<h2>手机号</h2>
+			<div></div>
+			<p>手机号可作为店员登陆的账号</p>
+			<p>可千万不要填错哦</p>
+			<p style="margin-top: 70px;"></p>
+			<h2>商户号</h2>
+			<p>输入水牌上的商户号绑定店员账号</p>
+			<p>让店员使用自己的水牌来收银</p>
+			<p>业绩一目了然</p>
+		</div>
+		<div id="btn_close_muck" class="btn-close"></div>
+	</div>
+	<script type="text/javascript">
+		var ico_pwd_display = document.getElementById('ico_pwd_display'),
+			txt_pwd = document.getElementById('txt_pwd'),
+			btn_close_muck = document.getElementById('btn_close_muck'),
+			muck = document.getElementById('muck'),
+			ico_bulb = document.getElementById('ico_bulb');
+		ico_pwd_display.onclick = function(){
+			if(txt_pwd.type == 'password'){
+				txt_pwd.type = 'text';
+				this.className += ' show';
+			}else {
+				txt_pwd.type = 'password';
+				this.className = 'ico_pwd_display';
+			}
+		}
+
+		btn_close_muck.onclick = function(){
+			muck.className = 'muck';
+		}
+
+		ico_bulb.onclick = function(){
+			muck.className += ' show';
+		}
+
+	</script>
+</body>
+</html>

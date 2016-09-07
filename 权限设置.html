@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-cmn-Hans">
+<head>
+	<meta charset="UTF-8">
+	<title>权限设置</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no, email=no" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telphone=no, email=no" />
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="HandheldFriendly" content="true">
+	<meta name="MobileOptimized" content="320">
+	<meta name="screen-orientation" content="portrait">
+	<meta name="x5-orientation" content="portrait">
+	<meta name="full-screen" content="yes">
+	<meta name="x5-fullscreen" content="true">
+	<meta name="browsermode" content="application">
+	<meta name="x5-page-mode" content="app">
+	<meta name="msapplication-tap-highlight" content="no">
+	<link rel="stylesheet" href="css/clerk_management.css" />
+</head>
+<body class="bg_efe">
+	<ul class="power_setup">
+		<li>订单处理
+			<div class="switch">
+				<div class="switch_track"></div>
+				<div class="switch_thumb"></div>
+			</div>
+		</li>
+		<li>商品管理
+			<div class="switch is_checked">
+				<div class="switch_track"></div>
+				<div class="switch_thumb"></div>
+			</div>
+		</li>
+		<li>空中充值
+			<div class="switch">
+				<div class="switch_track"></div>
+				<div class="switch_thumb"></div>
+			</div>
+		</li>
+	</ul>	
+	<div class="btn_group">
+		<a href="javascript:;" class="btn btn_save">保存</a>
+	</div>
+	<script type="text/javascript">
+		var switchs = document.querySelectorAll('.switch')
+
+		for(var i=0; i<switchs.length; i++){
+			switchs[i].onclick = function(){
+				if(this.className == "switch"){
+					this.className += ' is_checked';
+				}else {
+					this.className = 'switch';
+				}
+			}
+		}
+	</script>
+</body>
+</html>
