@@ -18,7 +18,9 @@ img{vertical-align:middle;border:0;-ms-interpolation-mode:bicubic;-webkit-tap-hi
 a{color:#000;-webkit-tap-highlight-color:rgba(0,0,0,0);text-decoration: none;outline:none;} 
 a:active{blr:expression(this.onFocus=this.blur())}
 a:focus {outline:none;-moz-outline:none;}
-
+.tc {
+	text-align: center;
+}
 .bg_efe {
 	background-color: #efeff4;
 }
@@ -71,7 +73,7 @@ a:focus {outline:none;-moz-outline:none;}
 		position: absolute;
 		right: 70px;
 		top: 1px;
-		width: 70px;
+		width: 95px;
 		height: 73px;
 		line-height: 73px;
 		z-index: 1;
@@ -87,8 +89,8 @@ a:focus {outline:none;-moz-outline:none;}
 			z-index: 2;
 		}
 		a.on {
-            -webkit-transform: translate3d(-140px,0,0) !important;
-            transform: translate3d(-140px,0,0) !important;
+            -webkit-transform: translate3d(-165px,0,0) !important;
+            transform: translate3d(-165px,0,0) !important;
             -webkit-transition: all .35s ease !important;
             transition: all .35s ease !important;
         }
@@ -329,6 +331,24 @@ a:focus {outline:none;-moz-outline:none;}
 		margin: 42px auto 0;
 		border-radius: 3px;
 	}
+	.btn-single {
+		display: inline-block;
+		height: 35px;
+		line-height: 35px;
+		border-radius: 16px;
+		font-size: 15px;
+		padding: 0 35px;
+		margin: 0 auto;
+	}
+}
+.btn_group_bottom {
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	padding: 8px 0;
+	background-color: #fff;
+	border-top: 1px solid #ddd;
+	z-index: 99;
 }
 .power_setup {
 	background: #fff;
@@ -436,7 +456,7 @@ a:focus {outline:none;-moz-outline:none;}
 }
 // 弹层
 .muck {
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100%;
@@ -498,10 +518,18 @@ a:focus {outline:none;-moz-outline:none;}
 		    border-bottom: 1px solid #ddd;
 	    }
 	    label {
-	    	font-size: 15px;
+	    	display: inline-block;
+	    	height: 34px;
+	    	line-height: 34px;
+	    	font-size: 16px;
 		    color: #999999;
 		    vertical-align: middle;
 		    margin-left: 3%;
+		    i {
+		    	color: #F05957;
+		    	font-size: 16px;
+	    	    vertical-align: middle;
+		    }
 	    }
 	    .input_s1 {
     	    display: inline-block;
@@ -543,7 +571,7 @@ a:focus {outline:none;-moz-outline:none;}
     color: #999;
 }
 .warm-tips {
-	margin: 20px 0;
+	margin: 20px 0 70px;
 	height: 20px;
 	padding-right: 17px;
 	line-height: 20px;
@@ -661,8 +689,96 @@ a:focus {outline:none;-moz-outline:none;}
 	margin: 15px 0;
 	li {
 		a {
-			background: #fff url(../img/ico-setup.png) no-repeat 96% center;
-			background-size: 17px 18px;
+			background-image: none;
 		}
+		.ico-setup {
+			position: absolute;
+			right: 4px;
+			top: 50%;
+			margin-top: -17px;
+			display: inline-block;
+			width: 17px;
+			height: 18px;
+			padding: 8px;
+			background: url(../img/ico-setup.png) no-repeat center;
+			background-size: 17px 18px;
+
+		}
+	}
+}
+.img-null {
+	display: inline-block;
+	width: 145px;
+	margin: 50px auto 0;
+}
+.clerk-null-txt {
+	margin-top: 50px;
+	font-size: 17px;
+	color: #999;
+}
+.edit-list {
+	margin-top: 15px;
+	border-top: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	li {
+		a {
+			height: 60px;
+			line-height: 60px;
+			color: #333333;
+			font-size: 16px;
+		}
+		&:last-child {
+			border-bottom: none;
+		}
+		.bound {
+			float: right;
+			margin-right: 15px;
+			color: #F25958;
+			font-size: 16px;
+		}
+	}
+}
+.bind-card {
+	margin-top: 10px;
+}
+.form-item {
+	padding: 13px 0;
+	background-color: #fff;
+	border-top: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	.form-lbl {
+	    display: inline-block;
+	    height: 34px;
+	    line-height: 34px;
+	    font-size: 16px;
+	    color: #999999;
+	    vertical-align: middle;
+	    margin-left: 3%;
+	}
+	.form-txt {
+		display: inline-block;
+	    vertical-align: middle;
+	    width: 65%;
+	    font-size: 15px;
+	    color: #333;
+	    padding: 8px 8px;
+	    appearance: none;
+	}
+}
+.tips {
+	width: 90%;
+	margin: 12px auto 0;
+	.ico-tips {
+		position: absolute;
+		display: inline-block;
+		width: 14px;
+		height: 20px;
+		background-position: 0 -50px;
+	}
+	.tips-txt {
+		display: inline-block;
+		margin-left: 22px;
+		color: #999999;
+		font-size: 11px;
 	}
 }
