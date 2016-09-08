@@ -11,8 +11,15 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "art-template-loader": "^0.1.4",
+    "css-loader": "^0.25.0",
     "grunt": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
-    "grunt-run": "^0.6.0"
+    "grunt-run": "^0.6.0",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.13.2",
+    "webpack-dev-middleware": "^1.6.1",
+    "webpack-dev-server": "^1.15.1",
+    "webpack-hot-middleware": "^2.12.2"
   }
 }
