@@ -43,17 +43,17 @@
 				{{/each}}
 			</select>
 		</div>
-		{{ each main as group i }}
-			<div class="list-title">{{ main[i].title }}</div>
-			{{ if main[i].eleId }}
+		{{ each section as group i }}
+			<div class="list-title"></div>
+			{{ if group.eleId }}
 			<ul id="list" class="list user_list">
 			{{ else }}
 			<ul class="list user_list">
 			{{ /if}}
-			    {{each main[i].clerk_list as entry i}}
+			    {{each group.list as entry i}}
 					<li class="item">
-						<div class="btn_edit">编辑资料</div>
-						<div class="btn_del">删除</div>
+						<div class="btn_edit list_item_edit" data-id="{{i}}">编辑资料</div>
+						<div class="btn_del list_item_del">删除</div>
 						<a href="#/details" class="clerk-item">
 							<span class="name">{{ entry.name }}</span>
 							<p class="item-bottom">
@@ -142,7 +142,7 @@
 						{{if item.isPwd}}
 							<input id="txt_pwd" type="{{item.type}}" placeholder="{{item.placeholder}}" class="input_s1"><span id="ico_pwd_display" class="ico_pwd_display"></span>							
 						{{else}}
-							<input type="{{item.type}}" placeholder="{{item.placeholder}}" class="input_s1">
+							<input {{if item.isReadonly }}readonly{{/if}} type="{{item.type}}" placeholder="{{item.placeholder}}" class="input_s1" value="{{item.value}}">
 						{{/if}}
 					</li>
 	            {{/each}}
@@ -190,6 +190,7 @@
 		</div>
 	</script>
 
+	<!-- 修改密码 -->
 	<script id="js-modify-pwd" type="text/html">
 		{{include 'js-add-clerk'}}
 	</script>
@@ -199,7 +200,7 @@
 		    <div class="weui_mask_transition" id="mask"></div>
 		    <div class="weui_actionsheet" id="weui_actionsheet">
 		        <div class="weui_actionsheet_menu">
-		            <div class="weui_actionsheet_cell">编辑店员信息</div>
+		            <a href="#/editList" class="weui_actionsheet_cell">编辑店员信息</a>
 		            <div id="js-del-clerk" class="weui_actionsheet_cell">删除成员</div>
 		        </div>
 		        <div class="weui_actionsheet_action">
@@ -229,7 +230,8 @@
 	</div>
 	<script type="text/javascript" src="js/jquery.min.js"></script>
 	<script type="text/javascript" src="js/etouch1.0.js"></script>
-	<script src="js/jquery-infinite-scroll/jquery.infinitescroll.js" type="text/javascript"></script>
+	<script type="text/javascript" src="js/jquery-infinite-scroll/jquery.infinitescroll.js"></script>
+	<script type="text/javascript" src="js/clerk.js"></script>
 	<script type="text/javascript">
 		// 店员管理首页
 		var clerk_list_data = {
@@ -248,27 +250,29 @@
 					value: ''
 				}
 			],
-		    main: [
-		    	{
-		    		title: '店员',
-		    		eleId: true,
-		    		clerk_list: [
-			    		{
-			    			name: '王二',
-			    			order_num: 23,
-			    			money_num: 232.22
-			    		},
-			    		{
-			    			name: '风清扬',
-			    			order_num: 13,
-			    			money_num: 12.02	
-			    		} 
-		    		]
-		    	},
-		    	{
+			section: [
+				{
+			    		title: '店员',
+			    		eleId: true,
+			    		list: [
+				    		{
+				    			name: '王二',
+				    			order_num: 23,
+				    			money_num: 232.22,
+				    			isBound: true
+				    		},
+				    		{
+				    			name: '风清扬',
+				    			order_num: 13,
+				    			money_num: 12.02,
+				    			isBound: false
+				    		} 
+			    		],
+				},
+				{
 		    		title: '其他',
 		    		eleId: false,
-		    		clerk_list: [
+		    		list: [
 			    		{
 			    			name: '店长订单',
 			    			order_num: 20,
@@ -281,7 +285,43 @@
 			    		} 
 		    		]
 		    	}
-		    ]
+			]
+		    // main: [
+		    // 	{
+		    // 		title: '店员',
+		    // 		eleId: true,
+		    // 		clerk_list: [
+			   //  		{
+			   //  			name: '王二',
+			   //  			order_num: 23,
+			   //  			money_num: 232.22,
+			   //  			isBound: true
+			   //  		},
+			   //  		{
+			   //  			name: '风清扬',
+			   //  			order_num: 13,
+			   //  			money_num: 12.02,
+			   //  			isBound: false
+			   //  		} 
+		    // 		],
+		    // 	},
+		    // 	{
+		    // 		title: '其他',
+		    // 		eleId: false,
+		    // 		clerk_list: [
+			   //  		{
+			   //  			name: '店长订单',
+			   //  			order_num: 20,
+			   //  			money_num: 152.22
+			   //  		},
+			   //  		{
+			   //  			name: '微信店铺订单',
+			   //  			order_num: 43,
+			   //  			money_num: 212.02	
+			   //  		} 
+		    // 		]
+		    // 	}
+		    // ]
 		};
 		var clerk_list_html = template('js-clerk_list', clerk_list_data);
 
@@ -382,11 +422,7 @@
 		}
 		var add_clerk_html = template('js-add-clerk', clerk_entry_data);
 
-		//修改店员信息
-		var edit_list_data = {
-			isBound: false
-		}
-		var edit_list_html =  template('js-edit-list', edit_list_data);
+		
 
 		//绑定桌牌
 		var bind_card_html = template('js-bind-card', {});
@@ -398,25 +434,29 @@
 					label: '店员姓名',
 					type: 'text',
 					placeholder: '姓名',
-					isRequire: false //必填
+					isRequire: false, //必填
+					isReadonly: true,
+					value: '王二'
 				},
 				{
 					label: '店员账号',
 					type: 'tel',
 					placeholder: '请输入店员的手机号',
-					isRequire: false
+					isRequire: false,
+					isReadonly: true,
+					value: '1212'
 				},
 				{
 					label: '提现密码',
 					type: 'password',
-					placeholder: '请输入密码',
+					placeholder: '请输入提现密码',
 					isRequire: false,
 					isPwd: true
 				},
 				{
-					label: '新密码',
+					label: '新 密 码',
 					type: 'password',
-					placeholder: '请输入密码',
+					placeholder: '请输入新的店员密码',
 					isRequire: false,
 					isPwd: true
 				}
@@ -426,6 +466,19 @@
 
 		var list = function () { 
 			document.getElementById('content').innerHTML = clerk_list_html;
+			moveDel();
+			$(".list_item_edit").click(function(){
+				var id = $(this).attr('data-id');
+				window.location.href = "#/editList/"+id;
+			});
+			$(".list_item_del").click(function(){
+				showMsg("删除店员后，该账号将无法再登录，<br>且不能以同样的账号再添加店员，<br>确认删除吗？",2);
+				user_id = $(this).parent();
+				$('#js_del').click(function(e){
+			       e.stopPropagation();
+					user_id.remove();
+				});
+			});
 		};
 
 		var details = function () { 
@@ -503,7 +556,13 @@
 			document.getElementById('content').innerHTML = edit_info_html;
 		}
 
-		var editList = function(){
+		var editList = function(id){
+			//修改店员信息
+			var list = clerk_list_data.section[0].list;
+			var edit_list_data = {
+				isBound: list[id].isBound
+			}
+			var edit_list_html =  template('js-edit-list', edit_list_data);
 			document.getElementById('content').innerHTML = edit_list_html;
 		}
 
@@ -521,9 +580,9 @@
 			'/details': details,
 			'/add': add,
 			'/editInfo': editInfo,
-			'/editList': editList,
+			'/editList/:id': editList,
 			'/bindCard': bindCard,
-			'/modifyPwd': modifyPwd
+			'/modifyPwd': modifyPwd,
 		}
 		var router = Router(routes);
 
@@ -559,6 +618,5 @@
 	    }
 
 	</script>
-	<script type="text/javascript" src="js/clerk.js"></script>
 </body>
 </html>
