@@ -5,14 +5,28 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "json": "node jsonFileToStr.js",
-    "watch": "grunt watch:json"
+    "json": "node tool/jsonFileToStr.js",
+    "watch": "grunt watch:json",
+    "clean": "rm -rf dist",
+    "start": "NODE_ENV=development node server.js --progress --colors --profile",
+    "build": "npm run clean && NODE_ENV=production webpack -p --progress --colors --profile"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "art-template-loader": "^0.1.4",
+    "css-loader": "^0.25.0",
+    "exports-loader": "^0.6.3",
     "grunt": "^1.0.1",
     "grunt-contrib-watch": "^1.0.0",
-    "grunt-run": "^0.6.0"
+    "grunt-run": "^0.6.0",
+    "imports-loader": "^0.6.5",
+    "merge": "^1.2.0",
+    "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.13.2",
+    "webpack-dev-middleware": "^1.6.1",
+    "webpack-dev-server": "^1.15.1",
+    "webpack-hot-middleware": "^2.12.2"
   }
 }
