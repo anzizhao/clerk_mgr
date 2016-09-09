@@ -23,65 +23,64 @@
 	<meta name="x5-page-mode" content="app">
 	<meta name="msapplication-tap-highlight" content="no">
 	<link rel="stylesheet" type="text/css" href="css/weui.min.css">
-	<link rel="stylesheet" href="js/dropload.css">
 	<link rel="stylesheet" href="css/clerk_management.css" />
 	<script type="text/javascript" src="js/template.js"></script>
 	<script type="text/javascript" src="js/director.min.js"></script>
 	
 </head>
 <body class="bg_efe">
+
 	<div id="content"></div>
 
 	<!-- 店员管理首页 -->
 	<script id="js-clerk_list" type="text/html">
-		{{if clerkNotNull}}
-		<div class="date-select">
-			<label class="lbl">时间:</label>
-			<select class="select">
-				{{ each time as item i }}
-				<option value="{{item.value}}">{{item.text}}</option>
-				{{/each}}
-			</select>
-		</div>
-		{{ each section as group i }}
-			<div class="list-title">{{group.title}}</div>
-			{{ if group.eleId }}
-			<ul id="list" class="list user_list">
-			{{ else }}
-			<ul class="list user_list">
-			{{ /if}}
-			    {{each group.list as entry i}}
-					<li class="item">
-						<div class="btn_edit list_item_edit" data-id="{{entry.clerkId}}">编辑资料</div>
-						<div class="btn_del list_item_del">删除</div>
-						<a href="#/details" class="clerk-item">
-							<span class="name">{{ entry.name }}</span>
-							<p class="item-bottom">
-								<span class="order_num icons">{{ entry.order_num }}笔</span>
-								<span class="money_num icons">{{ entry.money_num }}元</span>
-							</p>
-						</a>
-					</li>
-			    {{/each}}
-			</ul>
-	    {{/each}}
-	    <div class="btn_group tc btn_group_bottom">
-			<a class="btn btn-single" href="#/add">添加店员</a>
-		</div>
-	    {{else}}
-	    <div class="tc">
-	    	<img class="img-null" src="img/img-null.png">
-	    	<p class="clerk-null-txt">您还没有添加店员喔，现在去添加吧！</p>
-	    	<div class="btn_group">
-	    		<a href="#/add" class="btn btn_save">马上添加店员</a>
-	    	</div>
-	    </div>
+		{{if section[0].list.length != 0}}
+			<div class="date-select">
+				<label class="lbl">时间:</label>
+				<select id="js-select-date" class="select">
+					{{ each time as item i }}
+					<option value="{{item.value}}">{{item.text}}</option>
+					{{/each}}
+				</select>
+			</div>
+			{{ each section as group i }}
+				<div class="list-title">{{group.title}}</div>
+				{{ if group.eleId }}
+				<ul id="list" class="list user_list">
+				{{ else }}
+				<ul class="list user_list">
+				{{ /if}}
+				    {{each group.list as entry i}}
+						<li class="item">
+							<div class="btn_edit list_item_edit" data-id="{{entry.clerkId}}">编辑资料</div>
+							<div class="btn_del list_item_del">删除</div>
+							<a href="#/details" class="clerk-item">
+								<span class="name">{{ entry.name }}</span>
+								<p class="item-bottom">
+									<span class="order_num icons">{{ entry.order_num }}笔</span>
+									<span class="money_num icons">{{ entry.money_num }}元</span>
+								</p>
+							</a>
+						</li>
+				    {{/each}}
+				</ul>
+		    {{/each}}
+		    <div class="btn_group tc btn_group_bottom">
+				<a class="btn btn-single" href="">添加店员</a>
+			</div>
+		    {{else}}
+		    <div class="tc">
+		    	<img class="img-null" src="img/img-null.png">
+		    	<p class="clerk-null-txt">您还没有添加店员喔，现在去添加吧！</p>
+		    	<div class="btn_group">
+		    		<a href="" class="btn btn_save">马上添加店员</a>
+		    	</div>
+		    </div>
 	    {{/if}}
 	    <div class="warm-tips">
 	    	<i class="warm-tips-txt">扫描店长的桌牌进行支付，店员收不到消息的</i>
 	    	<i class="icons ico-bulbs"></i>
     	</div>
-			<!-- <a id="js_add_user" class="add_user" href="javascript:;">添加店员</a> -->
 	</script>
 
 	<!-- 店员详情－顶部 -->
@@ -133,36 +132,11 @@
 		<div class="loading"></div>
 	</script>
 
-	<!-- 新增店员 -->
-	<script id="js-add-clerk" type="text/html">
-		<form id="add-clerk-form" action="">
-			<ul class="add_user_form">
-				{{each main as item i}}
-					<li>
-						<label>{{if item.isRequire}}<i>*</i>{{/if}}{{item.label}}:</label>
-						{{if item.isPwd}}
-							<input id="txt_pwd" type="{{item.type}}" placeholder="{{item.placeholder}}" class="input_s1" name="{{item.name}}"><span id="ico_pwd_display" class="ico_pwd_display"></span>							
-						{{else}}
-							<input {{if item.isReadonly }}readonly{{/if}} type="{{item.type}}" placeholder="{{item.placeholder}}" class="input_s1" name="{{item.name}}">
-						{{/if}}
-					</li>
-	            {{/each}}
-	        </ul>
-	        <p class="tip">
-	        	<span class="tip_error">错误信息</span>
-				<span id="ico_bulb" class="ico_bulb"></span>
-	        </p>
-	     	<div class="btn_group">
-				<a id="js-add-clerk" href="#/list" class="btn btn_save">保存</a>
-			</div>
-		</form>
-	</script>
-
 	<!-- 修改店员信息 -->
 	<script id="js-edit-list" type="text/html">
 		<ul class="list edit-list">
 			<li>
-				<a href="#/modifyPwd">修改密码</a>
+				<a href="">修改密码</a>
 			</li>
 			<li>
 				{{if isBound}}
@@ -191,11 +165,7 @@
 		</div>
 	</script>
 
-	<!-- 修改密码 -->
-	<script id="js-modify-pwd" type="text/html">
-		{{include 'js-add-clerk'}}
-	</script>
-
+	<!-- weui-actionSheet -->
 	<script id="js-weui-actionSheet" type="text/html">
 		<div id="actionSheet_wrap">
 		    <div class="weui_mask_transition" id="mask"></div>
@@ -235,11 +205,10 @@
 	<script type="text/javascript">
 		// 店员管理首页
 		var clerk_list_data = {
-			clerkNotNull: true,
 			time: [
 				{
 					text: '今日',
-					value: new Date()
+					value: ''
 				},
 				{
 					text: '最近7日',
@@ -293,45 +262,7 @@
 		};
 		var clerk_list_html = template('js-clerk_list', clerk_list_data);
 
-		//绑定桌牌
-		var bind_card_html = template('js-bind-card', {});
-	
-		//修改密码
-		var modify_pwd_data = {
-			main: [
-				{
-					label: '店员姓名',
-					type: 'text',
-					placeholder: '姓名',
-					isRequire: false, //必填
-					isReadonly: true,
-					value: '王二'
-				},
-				{
-					label: '店员账号',
-					type: 'tel',
-					placeholder: '请输入店员的手机号',
-					isRequire: false,
-					isReadonly: true,
-					value: '1212'
-				},
-				{
-					label: '提现密码',
-					type: 'password',
-					placeholder: '请输入提现密码',
-					isRequire: false,
-					isPwd: true
-				},
-				{
-					label: '新 密 码',
-					type: 'password',
-					placeholder: '请输入新的店员密码',
-					isRequire: false,
-					isPwd: true
-				}
-			]
-		}
-		var modify_pwd_html = template('js-modify-pwd',modify_pwd_data);
+		
 
 		var list = function () { 
 			document.getElementById('content').innerHTML = clerk_list_html;
@@ -348,6 +279,8 @@
 					user_id.remove();
 				});
 			});
+
+			
 		};
 
 		var details = function () { 
@@ -486,64 +419,6 @@
             });
 		};
 
-		var add = function() {
-			// 新增店员帐号
-			var clerk_entry_data = {
-				main: [
-					{
-						label: '店员',
-						type: 'text',
-						placeholder: '姓名',
-						isRequire: true, //必填
-						name: 'name'
-					},
-					{
-						label: '帐号',
-						type: 'tel',
-						placeholder: '请输入店员的手机号',
-						isRequire: true,
-						name: 'account'
-					},
-					{
-						label: '密码',
-						type: 'password',
-						placeholder: '请输入密码',
-						isRequire: true,
-						isPwd: true,
-						name: 'pwd'
-					},
-					{
-						label: '商户号',
-						type: 'tel',
-						placeholder: '请输入商户号（非必填）',
-						isRequire: false,
-						name: 'shopNo'
-					}
-				]
-			}
-			var add_clerk_html = template('js-add-clerk', clerk_entry_data);
-
-			document.getElementById('content').innerHTML = add_clerk_html;
-
-			$("#js-add-clerk").click(function(e){
-				e.preventDefault();
-				var formData = new FormData($('#add-clerk-form')[0]);
-				var i=0, arr = clerk_entry_data.main;
-				for(i=0; i<arr.length; i++){
-					arr[i].value = formData.get(arr[i].name);
-					console.log(arr[i].value);
-				}
-				//TODO jiaoyao 
-				//TODO ajax
-				//TODO tiaozhuan 
-
-			});
-		}
-
-		var editInfo = function(){
-			document.getElementById('content').innerHTML = edit_info_html;
-		}
-
 		var editList = function(id){
 			//修改店员信息
 			var list = clerk_list_data.section[0].list,i=0;
@@ -561,22 +436,17 @@
 		}
 
 		var bindCard  = function(){
+			//绑定桌牌
+			var bind_card_html = template('js-bind-card', {});
 			document.getElementById('content').innerHTML = bind_card_html;
-		}
-
-		var modifyPwd = function(){
-			document.getElementById('content').innerHTML = modify_pwd_html;
 		}
 
 		// 路由配置
 		var routes = {
 			'/list': list,
 			'/details': details,
-			'/add': add,
-			'/editInfo': editInfo,
 			'/editList/:id': editList,
 			'/bindCard': bindCard,
-			'/modifyPwd': modifyPwd,
 		}
 		var router = Router(routes);
 
@@ -588,16 +458,6 @@
 	    }
 	    $('#js_closeMsg').click(hideMsg);
 
-	    // $('body').click(function(){
-	    // 	$('li a').removeClass('on').css({'-webkit-transform':'translate3d(0,0,0)','-webkit-transition':'all .2s ease'});
-	    // })
-	    $('#js_add_user').click(function(){
-	    	if($('#list li').length >= 2 ) {
-	    		showMsg('开通VIP，拥有更多帐号特权喔！',1,'马上开通');
-	    	}else {
-	    		// window.location= ''
-	    	}
-	    });
 	    function showMsg(msg,length,btnName){
 	    	$('#js_muck').show();
 	    	$('#single_btn,#double_btn').hide();
