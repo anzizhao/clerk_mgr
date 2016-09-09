@@ -1,3 +1,18 @@
+
+require('js/template')
+require('js/jquery.min')
+require('imports?this=>window!js/etouch1.0')
+require('js/jquery-infinite-scroll/jquery.infinitescroll')
+var director = require('js/director.min')
+
+
+var listTpl = require('./tpl/list.tpl')
+var detailsTpl = require('./tpl/details.tpl') 
+var addTpl = require('./tpl/addClerk.tpl')
+var editListTpl = require('./tpl/editList.tpl')
+var bindCard = require('./tpl/bindCard.tpl')
+var modifyPwdTpl = require('./tpl/modifyPwd.tpl')
+
 // 店员管理首页
 var clerk_list_data = {
     clerkNotNull: true,
@@ -50,7 +65,10 @@ var clerk_list_data = {
         }
     ]
 };
-var clerk_list_html = template('js-clerk_list', clerk_list_data);
+
+var clerk_list_html = listTpl(clerk_list_data);
+
+//var clerk_list_html = template('js-clerk_list', clerk_list_data);
 
 // 店员详情
 var clerk_details_data = {
@@ -115,7 +133,8 @@ var clerk_details_data = {
         }
     ]
 };
-var clerk_details_html = template('js-clerk_details', clerk_details_data);
+var clerk_details_html = detailsTpl(clerk_details_data);
+//var clerk_details_html = template('js-clerk_details', clerk_details_data);
 
 // 新增店员帐号
 var clerk_entry_data = {
@@ -147,16 +166,19 @@ var clerk_entry_data = {
         }
     ]
 }
-var add_clerk_html = template('js-add-clerk', clerk_entry_data);
+//var add_clerk_html = template('js-add-clerk', clerk_entry_data);
+var add_clerk_html = addTpl(clerk_entry_data);
 
 //修改店员信息
 var edit_list_data = {
     isBound: false
 }
-var edit_list_html =  template('js-edit-list', edit_list_data);
+//var edit_list_html =  template('js-edit-list', edit_list_data);
+var edit_list_html =  editListTpl(edit_list_data);
 
 //绑定桌牌
-var bind_card_html = template('js-bind-card', {});
+//var bind_card_html = template('js-bind-card', {});
+var bind_card_html = bindCard();
 
 //修改密码
 var modify_pwd_data = {
@@ -189,7 +211,8 @@ var modify_pwd_data = {
         }
     ]
 }
-var modify_pwd_html = template('js-modify-pwd',modify_pwd_data);
+//var modify_pwd_html = template('js-modify-pwd',modify_pwd_data);
+var modify_pwd_html = modifyPwdTpl (modify_pwd_data);
 
 var list = function () { 
     document.getElementById('content').innerHTML = clerk_list_html;
@@ -292,7 +315,7 @@ var routes = {
     '/bindCard': bindCard,
     '/modifyPwd': modifyPwd
 }
-var router = Router(routes);
+var router = director.Router(routes);
 
 router.init(['/list']);
 
@@ -312,6 +335,7 @@ $('#js_add_user').click(function(){
         // window.location= ''
     }
 });
+
 function showMsg(msg,length,btnName){
     $('#js_muck').show();
     $('#single_btn,#double_btn').hide();
@@ -325,3 +349,4 @@ function showMsg(msg,length,btnName){
     $('#msg').html(msg);
 }
 
+require('imports?$=jquery!./clerk')

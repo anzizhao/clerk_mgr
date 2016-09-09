@@ -227,9 +227,12 @@
     }
 
     if (typeof define === 'function' && (define.amd || define.cmd)) {
-        define(function() {
-            return eTouch(root, selector, fn);
-        });
+        //define(function() {
+            //return eTouch(root, selector, fn);
+        //});
+        window.etouch = function(root, selector, fn) {
+            return new eTouch(root, selector, fn);
+        };
     } else {
         window.etouch = function(root, selector, fn) {
             return new eTouch(root, selector, fn);

@@ -1,3 +1,6 @@
+
+
+
 var nowX = 0;
 var flag = null;
 var idx = null;

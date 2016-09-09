@@ -1,8 +1,8 @@
 var path = require('path');
 var webpack = require('webpack');
 var merge = require('merge');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
-var CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin");
+//var ExtractTextPlugin = require('extract-text-webpack-plugin');
+//var CommonsChunkPlugin = require("webpack/lib/optimize/CommonsChunkPlugin");
 
 var webpackConfig = {
     output: {
@@ -14,9 +14,20 @@ var webpackConfig = {
         //"jquery": "jQuery"
     },
     resolve: {
-        extensions: ['', '.js']
-
+        extensions: ['', '.js'],
+        alias: {
+            js: __dirname + '/js', 
+            jquery: __dirname + '/js/jquery.min'
+        }
     },
+
+    plugins: [   
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jQuery: "jquery",
+            "window.jQuery": "jquery"
+        })
+    ]
 };
 
 if (process.env.NODE_ENV === 'production') {
@@ -28,8 +39,7 @@ if (process.env.NODE_ENV === 'production') {
             loaders: [
                 {
                     test: /\.tpl$/, 
-                    loaders:'art-template' 
-                    include: path.join(__dirname, 'src')
+                    loader:'art-template' ,
                 },
                 { 
                     test: /\.(png|jpg|gif|jpeg)$/, 
@@ -44,17 +54,17 @@ if (process.env.NODE_ENV === 'production') {
                     include: path.resolve(__dirname, 'styles/'),
                     loader: 'style!css?sourceMap=true'
                 },
-            ]},
-
-            plugins : [
-                new webpack.DefinePlugin({
-                    'process.env': {
-                        NODE_ENV: JSON.stringify('production')
-                    }
-                }),
-                new webpack.optimize.OccurenceOrderPlugin(),
-                new webpack.optimize.UglifyJsPlugin({minimize: true})
-            ]  
+            ]
+        },
+        plugins : [
+            new webpack.DefinePlugin({
+                'process.env': {
+                    NODE_ENV: JSON.stringify('production')
+                }
+            }),
+            new webpack.optimize.OccurenceOrderPlugin(),
+            new webpack.optimize.UglifyJsPlugin({minimize: true})
+        ]  
     });
 }else{
     //webpackConfig.output.publicPath = 'http://localhost:3000/'
@@ -64,8 +74,7 @@ if (process.env.NODE_ENV === 'production') {
             loaders: [
                 {
                     test: /\.tpl$/, 
-                    loaders:'art-template' 
-                    include: path.join(__dirname, 'src')
+                    loader:'art-template', 
                 },
                 { 
                     test: /\.(png|jpg|gif|jpeg)$/, 
@@ -84,9 +93,9 @@ if (process.env.NODE_ENV === 'production') {
         },
         entry :{
             app:  [
-                'webpack-dev-server/client?http://localhost:3000',
+                'webpack-dev-server/client?http://localhost:3100',
                 'webpack/hot/only-dev-server',
-                './src/client/index.js',
+                './src/index.js',
             ],
         } ,
         plugins : [
