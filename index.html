@@ -3,30 +3,17 @@
 <head>
 	<meta charset="UTF-8">
 	<title>店员管理</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-	<meta name="apple-mobile-web-app-capable" content="yes" />
-	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-	<meta name="format-detection" content="telephone=no, email=no" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-	<meta name="apple-mobile-web-app-capable" content="yes" />
-	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-	<meta name="format-detection" content="telphone=no, email=no" />
 	<meta name="renderer" content="webkit">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="HandheldFriendly" content="true">
-	<meta name="MobileOptimized" content="320">
-	<meta name="screen-orientation" content="portrait">
-	<meta name="x5-orientation" content="portrait">
-	<meta name="full-screen" content="yes">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no, email=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="x5-fullscreen" content="true">
-	<meta name="browsermode" content="application">
-	<meta name="x5-page-mode" content="app">
-	<meta name="msapplication-tap-highlight" content="no">
 	<link rel="stylesheet" type="text/css" href="css/weui.min.css">
 	<link rel="stylesheet" href="css/clerk_management.css" />
 	<script type="text/javascript" src="js/template.js"></script>
 	<script type="text/javascript" src="js/director.min.js"></script>
-	
 </head>
 <body class="bg_efe">
 
@@ -205,39 +192,32 @@
 	<script type="text/javascript">
 		// 店员管理首页
 		var clerk_list_data = {
-			time: [
-				{
-					text: '今日',
-					value: ''
-				},
-				{
-					text: '最近7日',
-					value: ''
-				},
-				{
-					text: '最近30日',
-					value: ''
-				}
-			],
+			// time: [
+			// 	{
+			// 		text: '今日',
+			// 		value: '0'
+			// 	},
+			// 	{
+			// 		text: '最近7日',
+			// 		value: '7'
+			// 	},
+			// 	{
+			// 		text: '最近30日',
+			// 		value: '30'
+			// 	}
+			// ],
 			section: [
 				{
 		    		title: '店员',
 		    		eleId: true,
-		    		list: [
+		    		list: [		
 			    		{
-			    			clerkId: 123, //店员Id
-			    			name: '王二',
-			    			order_num: 23,
-			    			money_num: 232.22,
-			    			isBound: false
-			    		},
-			    		{
-			    			clerkId: 123, //店员Id
-			    			name: '风清扬',
-			    			order_num: 13,
-			    			money_num: 12.02,
-			    			isBound: false
-			    		} 
+			    			clerkId: '123', //店员ID
+			    			name: '王二', //店员姓名
+			    			order_num: 23, //订单数
+			    			money_num: 232.22, 	//实收金额
+							isBound: true //是否绑定桌牌
+			    		},	    		
 		    		],
 				},
 				{
@@ -260,27 +240,42 @@
 		    	}
 			]
 		};
-		var clerk_list_html = template('js-clerk_list', clerk_list_data);
 
 		
 
 		var list = function () { 
-			document.getElementById('content').innerHTML = clerk_list_html;
-			moveDel();
-			$(".list_item_edit").click(function(){
-				var id = $(this).attr('data-id');
-				window.location.href = "#/editList/"+id;
+
+			$.getJSON("http://localhost/test/jsonp.php?jsoncallback=?", function(data) {
+				if(data.error == 0){
+					clerk_list_data = data.data;
+					var clerk_list_html = template('js-clerk_list', clerk_list_data);
+					document.getElementById('content').innerHTML = clerk_list_html;
+					moveDel();
+					$(".list_item_edit").click(function(){
+						var id = $(this).attr('data-id');
+						window.location.href = "#/editList/"+id;
+					});
+					$(".list_item_del").click(function(){
+						showMsg("删除店员后，该账号将无法再登录，<br>且不能以同样的账号再添加店员，<br>确认删除吗？",2);
+						user_id = $(this).parent();
+						$('#js_del').click(function(e){
+					       e.stopPropagation();
+							user_id.remove();
+						});
+					});
+				}
 			});
-			$(".list_item_del").click(function(){
-				showMsg("删除店员后，该账号将无法再登录，<br>且不能以同样的账号再添加店员，<br>确认删除吗？",2);
-				user_id = $(this).parent();
-				$('#js_del').click(function(e){
-			       e.stopPropagation();
-					user_id.remove();
-				});
+			
+			$.getJSON("http://localhost/test/date.php?jsoncallback=?", function(data){
+				if(data.error == 0){
+					console.log(data.data);
+				}
+			})
+
+			$("#js-select-date").change(function(){
+
 			});
 
-			
 		};
 
 		var details = function () { 
