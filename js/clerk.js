@@ -69,4 +69,8 @@ function moveDel(){
 	    flag = null;
 	});
 
+	$(document).click(function(e){
+		e.stopPropagation();
+		$('li a').removeClass('on').css({'-webkit-transform':'translate3d(0,0,0)','-webkit-transition':'all .2s ease'});
+	});
 }

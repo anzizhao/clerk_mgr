@@ -30,6 +30,7 @@
 					{{/each}}
 				</select>
 			</div>
+			
 			{{ each section as group i }}
 				<div class="list-title">{{group.title}}</div>
 				{{ if group.eleId }}
@@ -52,6 +53,7 @@
 				    {{/each}}
 				</ul>
 		    {{/each}}
+
 		    <div class="btn_group tc btn_group_bottom">
 				<a class="btn btn-single" href="">添加店员</a>
 			</div>
@@ -190,90 +192,53 @@
 	<script type="text/javascript" src="js/jquery-infinite-scroll/jquery.infinitescroll.js"></script>
 	<script type="text/javascript" src="js/clerk.js"></script>
 	<script type="text/javascript">
+
+		function init(){
+			moveDel();
+			$(".list_item_edit").click(function(){
+				var id = $(this).attr('data-id');
+				window.location.href = "#/editList/"+id;
+			});
+			$(".list_item_del").click(function(e){
+				e.stopPropagation();
+				showMsg("删除店员后，该账号将无法再登录，<br>且不能以同样的账号再添加店员，<br>确认删除吗？",2);
+				user_id = $(this).parent();
+				$('#js_del').click(function(e){
+			       e.stopPropagation();
+					user_id.remove();
+				});
+			});
+		}
 		// 店员管理首页
 		var clerk_list_data = {
-			// time: [
-			// 	{
-			// 		text: '今日',
-			// 		value: '0'
-			// 	},
-			// 	{
-			// 		text: '最近7日',
-			// 		value: '7'
-			// 	},
-			// 	{
-			// 		text: '最近30日',
-			// 		value: '30'
-			// 	}
-			// ],
-			section: [
-				{
-		    		title: '店员',
-		    		eleId: true,
-		    		list: [		
-			    		{
-			    			clerkId: '123', //店员ID
-			    			name: '王二', //店员姓名
-			    			order_num: 23, //订单数
-			    			money_num: 232.22, 	//实收金额
-							isBound: true //是否绑定桌牌
-			    		},	    		
-		    		],
-				},
-				{
-		    		title: '其他',
-		    		eleId: false,
-		    		list: [
-			    		{
-			    			clerkId: 123, //店员Id
-			    			name: '店长订单',
-			    			order_num: 20,
-			    			money_num: 152.22
-			    		},
-			    		{
-			    			clerkId: 123, //店员Id
-			    			name: '微信店铺订单',
-			    			order_num: 43,
-			    			money_num: 212.02	
-			    		} 
-		    		]
-		    	}
-			]
+			time: [],
+			section: []
 		};
 
-		
+
 
 		var list = function () { 
 
-			$.getJSON("http://localhost/test/jsonp.php?jsoncallback=?", function(data) {
-				if(data.error == 0){
-					clerk_list_data = data.data;
-					var clerk_list_html = template('js-clerk_list', clerk_list_data);
-					document.getElementById('content').innerHTML = clerk_list_html;
-					moveDel();
-					$(".list_item_edit").click(function(){
-						var id = $(this).attr('data-id');
-						window.location.href = "#/editList/"+id;
-					});
-					$(".list_item_del").click(function(){
-						showMsg("删除店员后，该账号将无法再登录，<br>且不能以同样的账号再添加店员，<br>确认删除吗？",2);
-						user_id = $(this).parent();
-						$('#js_del').click(function(e){
-					       e.stopPropagation();
-							user_id.remove();
-						});
-					});
-				}
-			});
-			
 			$.getJSON("http://localhost/test/date.php?jsoncallback=?", function(data){
 				if(data.error == 0){
-					console.log(data.data);
+					clerk_list_data.time = data.data.time;
 				}
 			})
 
-			$("#js-select-date").change(function(){
-
+			$.getJSON("http://localhost/test/jsonp.php?jsoncallback=?", function(data) {
+				if(data.error == 0){
+					clerk_list_data.section = data.data.section;
+					var clerk_list_html = template('js-clerk_list', clerk_list_data);
+					document.getElementById('content').innerHTML = clerk_list_html;
+					init();
+					$("#js-select-date").change(function(){
+						$.getJSON("http://localhost/test/jsonp.php?jsoncallback=?", function(data) {
+							if(data.error == 0){
+								
+							}
+						})
+					});
+				}
 			});
 
 		};
