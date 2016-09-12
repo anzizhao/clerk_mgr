@@ -6,6 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "json": "node jsonFileToStr.js",
+    "start": "anywhere -p 8373",
+    "server":  "json-server ./test/data/mockdata.js --port 6330 --routes  ./test/data/routes.json",
     "watch": "grunt watch:json"
   },
   "author": "",

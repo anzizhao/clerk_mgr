@@ -42,7 +42,7 @@
 						<li class="item">
 							<div class="btn_edit list_item_edit" data-id="{{entry.clerkId}}">编辑资料</div>
 							<div class="btn_del list_item_del">删除</div>
-							<a href="#/details" class="clerk-item">
+                            <a href="{{'#/details/' + entry.clerkId }}" class="clerk-item">
 								<span class="name">{{ entry.name }}</span>
 								<p class="item-bottom">
 									<span class="order_num icons">{{ entry.order_num }}笔</span>
@@ -108,7 +108,7 @@
 				{{/each}}
 			</div>
 		{{/each}}
-   		<div id="navigation"><a href="mockdata.json?page=1"></a></div>
+        <div id="navigation"><a href="{{'/api/detailList?clerkId='+ clerkId + '&date='  + date +  '&page=1' }}"></a></div>
 	</script>
 
 	<!-- 店员详情 -->
@@ -192,164 +192,227 @@
 	<script type="text/javascript" src="js/jquery-infinite-scroll/jquery.infinitescroll.js"></script>
 	<script type="text/javascript" src="js/clerk.js"></script>
 	<script type="text/javascript">
-
-		function init(){
-			moveDel();
-			$(".list_item_edit").click(function(){
-				var id = $(this).attr('data-id');
-				window.location.href = "#/editList/"+id;
-			});
-			$(".list_item_del").click(function(e){
-				e.stopPropagation();
-				showMsg("删除店员后，该账号将无法再登录，<br>且不能以同样的账号再添加店员，<br>确认删除吗？",2);
-				user_id = $(this).parent();
-				$('#js_del').click(function(e){
-			       e.stopPropagation();
-					user_id.remove();
-				});
-			});
-		}
+        // 全局数据
 		// 店员管理首页
 		var clerk_list_data = {
 			time: [],
 			section: []
 		};
-
-
+        var opState ={
+            list: {}, 
+            detail:{},
+        }
 
 		var list = function () { 
+            // 初始化状态
+            // api 的状态
+            var apiStatus = {
+                date: false, 
+                list: false,
+            }
+            // 操作状态
+            opState.list.timSelect =  null
 
-			$.getJSON("http://localhost/test/date.php?jsoncallback=?", function(data){
+			$.getJSON("/api/date", function(data){
 				if(data.error == 0){
 					clerk_list_data.time = data.data.time;
+                    apiStatus.date = true
+                    shouldRender();
 				}
 			})
 
-			$.getJSON("http://localhost/test/jsonp.php?jsoncallback=?", function(data) {
-				if(data.error == 0){
-					clerk_list_data.section = data.data.section;
-					var clerk_list_html = template('js-clerk_list', clerk_list_data);
-					document.getElementById('content').innerHTML = clerk_list_html;
-					init();
-					$("#js-select-date").change(function(){
-						$.getJSON("http://localhost/test/jsonp.php?jsoncallback=?", function(data) {
-							if(data.error == 0){
-								
-							}
-						})
-					});
-				}
-			});
+
+            getList(null,function(){
+                    apiStatus.list = true ;
+                    shouldRender();
+                })
+
+            function getList(params, fn){
+                var url 
+                if( params &&  params.date ) {
+                    url = "/api/list_date" + params.date
+                } else {
+                    url =  "/api/list"
+                } 
+
+                $.getJSON( url , function(data) {
+                    if(data.error == 0){
+                        clerk_list_data.section = data.data.section;
+                        if( fn instanceof Function ) {
+                            fn() 
+                        }
+                    }
+                });
+            
+            }
+            // 渲染list 页面 
+            function render(){
+                var clerk_list_html = template('js-clerk_list', clerk_list_data);
+                document.getElementById('content').innerHTML = clerk_list_html;
+                init();
+            }
+            function shouldRender(){
+                if( apiStatus.date && apiStatus.list )  {
+                    render() 
+                }
+            }
+            function init(){
+                moveDel();
+                $(".list_item_edit").click(function(){
+                        var id = $(this).attr('data-id');
+                        window.location.href = "#/editList/"+id;
+                        });
+
+
+                $(".list_item_del").click(function(e){
+                        e.stopPropagation();
+                        showMsg("删除店员后，该账号将无法再登录，<br>且不能以同样的账号再添加店员，<br>确认删除吗？",2);
+                        user_id = $(this).parent();
+                        $('#js_del').click(function(e){
+                            e.stopPropagation();
+                            user_id.remove();
+                            });
+                        });
+                $("#js-select-date")
+                    .change( function(){
+                            opState.list.timeSelect = $(this).val()
+                            var params = {  date: opState.list.timeSelect  }
+                            getList(params, function(){
+                                render();
+                                // 重新选中
+                                $("#js-select-date").val( opState.list.timeSelect )
+                                })
+                            });
+            }
 
 		};
 
-		var details = function () { 
-			// 店员详情
-			var clerk_details_data = {
-				entry: {
-					clerkId: '123',
-					name: '王二',
-					order_num: '12',
-					money_num: '123'
-				},
-				main: [
-					{
-						date: '2016年03月12日',
-						totalPaidIn: '232', //金额总数
-						details: [
-							{
-								orderAmount: '25', 
-								coupon: '0.4',
-								paidIn: '123',
-								time: '14:42:23'
-							},
-							{
-								orderAmount: '125', 
-								coupon: '10.4',
-								paidIn: '223',
-								time: '12:42:23'
-							},
-						]
-					},
-					{
-						date: '2016年03月11日',
-						totalPaidIn: '132', //金额总数
-						details: [
-							{
-								orderAmount: '25', 
-								coupon: '0.4',
-								paidIn: '123',
-								time: '14:42:23'
-							},
-							{
-								orderAmount: '25', 
-								coupon: '0.4',
-								paidIn: '123',
-								time: '14:42:23'
-							},
-						]
-					},
-					{
-						date: '2016年03月10日',
-						totalPaidIn: '132', //金额总数
-						details: [
-							{
-								orderAmount: '205', 
-								coupon: '20.4',
-								paidIn: '223',
-								time: '10:42:23'
-							},
-						]
-					}
-				]
-			};
-			var clerk_details_html = template('js-clerk_details', clerk_details_data);
+		var details = function (clerkId) { 
+            //初始化状态
+            var clerk_details_data  =  {
+                entry : null, 
+                main: null,
+                clerkId: clerkId,
+                date: 1,
+            } 
+
+            // 获取页面数据
+            var params = null
+            var timeSelect = opState.list.timeSelect
+            if( timeSelect  ) {
+                params = {
+                    date: timeSelect 
+                }; 
+                clerk_details_data.date = timeSelect 
+            }
+
+            getDetail(params, function(){
+                        // 获取数据后  渲染页面
+                        render() 
+                    })
+
+            // 渲染detail页面 
+            function render(){
+                var clerk_details_html = template('js-clerk_details', clerk_details_data);
+                document.getElementById('content').innerHTML = clerk_details_html;
+
+                init();
+            }
+
+            function getDetail(params, fn ) {
+                var url  =  "/api/detail_" + clerkId ;
+                if( params && params.date)  {
+                    url +=  "&" + params.date 
+                }
+
+                $.getJSON(url, function(data){
+                    if(data.error == 0){
+                        clerk_details_data.entry = data.data;
+                        if( fn instanceof Function ) {
+                            fn() 
+                        }
+                    }
+                })
+            }
+            function getDetailList(params, fn) {
+                var url  =  "/api/detailList_" + clerkId ;
+                if( params && params.date)  {
+                    url +=  "_" + params.date 
+                }
+
+                $.getJSON(url, function(data){
+                    if(data.error == 0){
+                        clerk_details_data.entry = data.data;
+                        if( fn instanceof Function ) {
+                            fn() 
+                        }
+                    }
+                })
+            
+            }
 			
-			document.getElementById('content').innerHTML = clerk_details_html;
-			$('#masonny-div').infinitescroll({
-	            navSelector  : "#navigation",   // 页面分页元素(成功后会被隐藏)
-	            nextSelector : "#navigation a", // 需要点击的下一页链接，和2的html要对应
-	            itemSelector : ".clerk-details-list"  , // ajax回来之后，每一项的selecter
-	                                      //（比如每篇文章都有item这个class）
-	            debug: true, //启用调试信息
-	            animate: false, //当有新数据加载进来的时候，页面是否有动画效果，默认没有
-	            extraScrollPx: 150, //滚动条距离底部多少像素的时候开始加载，默认150
-	            bufferPx: 40, //载入信息的显示时间，时间越大，载入信息显示时间越短
-	            errorCallback: function(errorType) {
-	            	if( errorType === 'done'){
+            function init(){
+                $('#masonny-div').infinitescroll({
+                    navSelector  : "#navigation",   // 页面分页元素(成功后会被隐藏)
+                    nextSelector : "#navigation a", // 需要点击的下一页链接，和2的html要对应
+                    itemSelector : ".clerk-details-list"  , // ajax回来之后，每一项的selecter
+                                              //（比如每篇文章都有item这个class）
+                    debug: true, //启用调试信息
+                    animate: false, //当有新数据加载进来的时候，页面是否有动画效果，默认没有
+                    extraScrollPx: 150, //滚动条距离底部多少像素的时候开始加载，默认150
+                    bufferPx: 40, //载入信息的显示时间，时间越大，载入信息显示时间越短
+                    errorCallback: function(errorType) {
+                        if( errorType === 'done'){
 
-	            		//TODO 
-	            		// finish 
-	            	}
-	                // alert('error:'+errorType);
-	            }, //当出错的时候，比如404页面的时候执行的函数
-	            localMode: true, //是否允许载入具有相同函数的页面，默认为false
-	            dataType: 'json',//可以是json
-				template: function(data) {
-				//data表示服务端返回的json格式数据，这里需要把data转换成瀑布流块的html格式，然后返回给回到函数
-					// return data;
-					var html = template('js-clerk_details_list',data);
-					document.getElementById('masonny-div').innerHTML += html;
-               	},
-	            loading: {
-	                img: "img/loading.gif",
-	                msgText: "",
-	                finishedMsg: '没有更多记录了',
-	                selector: '.loading' // 显示loading信息的div
-	            }
-	        },function(newElems) {
-	            //程序执行完的回调函数
-	        })
+                            //TODO 
+                            // finish 
+                        }
+                        // alert('error:'+errorType);
+                    }, //当出错的时候，比如404页面的时候执行的函数
+                    localMode: true, //是否允许载入具有相同函数的页面，默认为false
+                    dataType: 'json',//可以是json
+                    template: function(data) {
+                    //data表示服务端返回的json格式数据，这里需要把data转换成瀑布流块的html格式，然后返回给回到函数
+                        // return data;
+                        var html = template('js-clerk_details_list',data);
+                        document.getElementById('masonny-div').innerHTML += html;
+                    },
+                    loading: {
+                        img: "img/loading.gif",
+                        msgText: "",
+                        finishedMsg: '没有更多记录了',
+                        selector: '.loading' // 显示loading信息的div
+                    }
+                },function(newElems) {
+                    //程序执行完的回调函数
+                })
 
-	        // $("#navigation a").attr("href","mockdata.json?page=1&clerkId="+clerk_details_data.entry.clerkId);
 
-	        //打开 actionSheet
-	        var mask = $('#mask');
-            var weuiActionsheet = $('#weui_actionsheet');
+                // $("#navigation a").attr("href","mockdata.json?page=1&clerkId="+clerk_details_data.entry.clerkId);
 
-            $("#js-ico-setup").click(function(){
-            	showActionSheet();
-            });
+                //打开 actionSheet
+                var mask = $('#mask');
+                var weuiActionsheet = $('#weui_actionsheet');
+
+                $("#js-ico-setup").click(function(){
+                    showActionSheet();
+                });
+
+                $('#actionsheet_cancel').on('click', function () {
+                    hideActionSheet(weuiActionsheet, mask);
+                });
+
+                //跳转 编辑店员信息
+                $("#js-actionsheet-editList").click(function(){
+                    var id = clerk_details_data.entry.clerkId;
+                    window.location.href = "#/editList/"+id;
+                })
+
+                $("#js-del-clerk").click(function(){
+                    hideActionSheet(weuiActionsheet, mask);
+                    showMsg("删除店员后，该账号将无法再登录，<br>且不能以同样的账号再添加店员，<br>确认删除吗？",2)
+                });
+            }
 
             function showActionSheet(){
             	weuiActionsheet.addClass('weui_actionsheet_toggle');
@@ -358,25 +421,12 @@
 		                hideActionSheet(weuiActionsheet, mask);
 		            });
         	}
-            $('#actionsheet_cancel').on('click', function () {
-                hideActionSheet(weuiActionsheet, mask);
-            });
             
             function hideActionSheet(weuiActionsheet, mask) {
                 weuiActionsheet.removeClass('weui_actionsheet_toggle');
                 mask.hide().removeClass('weui_fade_toggle');
             }
 
-            //跳转 编辑店员信息
-            $("#js-actionsheet-editList").click(function(){
-            	var id = clerk_details_data.entry.clerkId;
-				window.location.href = "#/editList/"+id;
-            })
-
-            $("#js-del-clerk").click(function(){
-                hideActionSheet(weuiActionsheet, mask);
-            	showMsg("删除店员后，该账号将无法再登录，<br>且不能以同样的账号再添加店员，<br>确认删除吗？",2)
-            });
 		};
 
 		var editList = function(id){
@@ -404,7 +454,7 @@
 		// 路由配置
 		var routes = {
 			'/list': list,
-			'/details': details,
+			'/details/:id': details,
 			'/editList/:id': editList,
 			'/bindCard': bindCard,
 		}

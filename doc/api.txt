@@ -1,0 +1,138 @@
+返回数据格式:
+{
+	error: 0,  //0:成功 
+	msg: '',  //错误信息
+	data: {} //具体数据
+}
+
+
+一、店员管理首页
+
+	1.店员列表
+		method: GET
+		url: 暂定
+		参数: clerkId,date
+		返回数据: {
+			error: 0,
+			msg: '',
+			data: {
+				main: [
+			    	{
+			    		title: '店员',
+			    		eleId: true,
+			    		list: [
+				    		{
+				    			clerkId: '123', //店员ID
+				    			name: '王二', //店员姓名
+				    			order_num: 23, //订单数
+				    			money_num: 232.22, 	//实收金额
+								isBound: true //是否绑定桌牌
+				    		} 
+			    		]
+			    	}		    	
+			    ]
+		    }
+		}
+
+	2.删除店员
+		method: POST
+		url: 暂定
+		参数: clerkId(店员ID)
+		返回数据: {
+			error: 0,
+			msg: ''
+		}	
+
+	3.获取日期选择  暂定
+		method: GET
+		url: 暂定
+		参数: 暂定
+		返回数据: {
+			error: 0,
+			msg: '',
+			data: {
+				time: [
+					{
+						text: '今日',
+						value: ''
+					},
+					{
+						text: '最近7日',
+						value: ''
+					},
+					{
+						text: '最近30日',
+						value: ''
+					}
+				]
+			}
+		}
+
+
+二、绑定桌牌
+	
+	1.绑定桌牌
+		method: POST	
+		url: 暂定
+		参数: clerkId(店员ID),shopNo(要绑定桌牌的商户号)
+		返回数据: 
+			1.成功； 
+			{
+				error: 0,
+				msg: ''
+			}
+			2.错误（每个商户号只能绑定一个帐号（请勿使用店主帐号所绑定的桌牌进行重复绑定））
+			{
+				error: 100,
+				msg: '' //错误信息	
+			}
+
+
+三、查看店员数据
+
+	1.获取店员订单信息
+		method: GET	
+		url: 暂定
+		参数: clerkId(店员ID)
+		返回数据: {
+			error: 0,
+			msg: '',
+			data: {
+				clerkId: '1', //店员ID
+				name: '王二'	, //店员姓名
+				order_num: 23, //订单数
+    			money_num: 232.22, 	//实收金额	
+			}
+		}
+
+	2.获取店员订单列表
+		method: GET	
+		url: 暂定
+		参数: clerkId(店员ID),date(筛选条件-日期),page(页数)
+		返回数据: {
+			error: 0,
+			msg: '',
+			data: {
+				"list": [
+					{
+						"date": "2012年03月12日", 
+						"totalPaidIn": "232", //总实收金额
+						"details": [
+							{
+								"orderAmount": "25", //订单金额
+								"coupon": "0.4", //商家优惠
+								"paidIn": "123", //实收金额
+								"time": "14:42:23" //交易时间
+							}
+						]
+					}
+				]
+			},
+			status: true //true: 有更多数据 false: 没有更多数据
+		}
+
+
+	3.删除店员信息
+	（同 店员管理首页 > 2.删除店员）
+
+
