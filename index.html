@@ -3,30 +3,17 @@
 <head>
 	<meta charset="UTF-8">
 	<title>店员管理</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-	<meta name="apple-mobile-web-app-capable" content="yes" />
-	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-	<meta name="format-detection" content="telephone=no, email=no" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-	<meta name="apple-mobile-web-app-capable" content="yes" />
-	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
-	<meta name="format-detection" content="telphone=no, email=no" />
 	<meta name="renderer" content="webkit">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="HandheldFriendly" content="true">
-	<meta name="MobileOptimized" content="320">
-	<meta name="screen-orientation" content="portrait">
-	<meta name="x5-orientation" content="portrait">
-	<meta name="full-screen" content="yes">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+	<meta name="format-detection" content="telephone=no, email=no" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="x5-fullscreen" content="true">
-	<meta name="browsermode" content="application">
-	<meta name="x5-page-mode" content="app">
-	<meta name="msapplication-tap-highlight" content="no">
 	<link rel="stylesheet" type="text/css" href="css/weui.min.css">
 	<link rel="stylesheet" href="css/clerk_management.css" />
 	<script type="text/javascript" src="js/template.js"></script>
 	<script type="text/javascript" src="js/director.min.js"></script>
-	
 </head>
 <body class="bg_efe">
 
@@ -43,6 +30,7 @@
 					{{/each}}
 				</select>
 			</div>
+			
 			{{ each section as group i }}
 				<div class="list-title">{{group.title}}</div>
 				{{ if group.eleId }}
@@ -65,6 +53,7 @@
 				    {{/each}}
 				</ul>
 		    {{/each}}
+
 		    <div class="btn_group tc btn_group_bottom">
 				<a class="btn btn-single" href="">添加店员</a>
 			</div>
@@ -203,75 +192,15 @@
 	<script type="text/javascript" src="js/jquery-infinite-scroll/jquery.infinitescroll.js"></script>
 	<script type="text/javascript" src="js/clerk.js"></script>
 	<script type="text/javascript">
-		// 店员管理首页
-		var clerk_list_data = {
-			time: [
-				{
-					text: '今日',
-					value: ''
-				},
-				{
-					text: '最近7日',
-					value: ''
-				},
-				{
-					text: '最近30日',
-					value: ''
-				}
-			],
-			section: [
-				{
-		    		title: '店员',
-		    		eleId: true,
-		    		list: [
-			    		{
-			    			clerkId: 123, //店员Id
-			    			name: '王二',
-			    			order_num: 23,
-			    			money_num: 232.22,
-			    			isBound: false
-			    		},
-			    		{
-			    			clerkId: 123, //店员Id
-			    			name: '风清扬',
-			    			order_num: 13,
-			    			money_num: 12.02,
-			    			isBound: false
-			    		} 
-		    		],
-				},
-				{
-		    		title: '其他',
-		    		eleId: false,
-		    		list: [
-			    		{
-			    			clerkId: 123, //店员Id
-			    			name: '店长订单',
-			    			order_num: 20,
-			    			money_num: 152.22
-			    		},
-			    		{
-			    			clerkId: 123, //店员Id
-			    			name: '微信店铺订单',
-			    			order_num: 43,
-			    			money_num: 212.02	
-			    		} 
-		    		]
-		    	}
-			]
-		};
-		var clerk_list_html = template('js-clerk_list', clerk_list_data);
 
-		
-
-		var list = function () { 
-			document.getElementById('content').innerHTML = clerk_list_html;
+		function init(){
 			moveDel();
 			$(".list_item_edit").click(function(){
 				var id = $(this).attr('data-id');
 				window.location.href = "#/editList/"+id;
 			});
-			$(".list_item_del").click(function(){
+			$(".list_item_del").click(function(e){
+				e.stopPropagation();
 				showMsg("删除店员后，该账号将无法再登录，<br>且不能以同样的账号再添加店员，<br>确认删除吗？",2);
 				user_id = $(this).parent();
 				$('#js_del').click(function(e){
@@ -279,8 +208,39 @@
 					user_id.remove();
 				});
 			});
+		}
+		// 店员管理首页
+		var clerk_list_data = {
+			time: [],
+			section: []
+		};
 
-			
+
+
+		var list = function () { 
+
+			$.getJSON("http://localhost/test/date.php?jsoncallback=?", function(data){
+				if(data.error == 0){
+					clerk_list_data.time = data.data.time;
+				}
+			})
+
+			$.getJSON("http://localhost/test/jsonp.php?jsoncallback=?", function(data) {
+				if(data.error == 0){
+					clerk_list_data.section = data.data.section;
+					var clerk_list_html = template('js-clerk_list', clerk_list_data);
+					document.getElementById('content').innerHTML = clerk_list_html;
+					init();
+					$("#js-select-date").change(function(){
+						$.getJSON("http://localhost/test/jsonp.php?jsoncallback=?", function(data) {
+							if(data.error == 0){
+								
+							}
+						})
+					});
+				}
+			});
+
 		};
 
 		var details = function () { 
