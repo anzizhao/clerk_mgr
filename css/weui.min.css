@@ -52,6 +52,7 @@
   background-color: #FFFFFF;
 }
 .weui_actionsheet_cell {
+  display: block;
   position: relative;
   padding: 16px 0;
   text-align: center;
