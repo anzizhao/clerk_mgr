@@ -205,6 +205,7 @@ module.exports = function() {
             }
         },
         detailList: {
+            status: false,
             error: 0,
             msg: '',
             data: [
