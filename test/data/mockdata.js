@@ -191,7 +191,8 @@ module.exports = function() {
                 clerkId: '123',
                 name: '王二',
                 order_num: '12',
-                money_num: '123'
+                money_num: '123',
+                isBound: true //是否绑定桌牌
             }
         },
         detail_124: {
@@ -202,6 +203,7 @@ module.exports = function() {
                 name: '风清扬',
                 order_num: 713,
                 money_num: 712.02,
+                isBound: false //是否绑定桌牌
             }
         },
         detailList: {

@@ -132,7 +132,7 @@
 				{{if isBound}}
 					<a href="">查看桌牌<span class="bound">已绑定</span></a>
 					{{else}}
-					<a href="#/bindCard">绑定桌牌</a>
+					<a href="javascript:;" id="bindcard-button">绑定桌牌</a>
 				{{/if}}
 			</li>
 		</ul>
@@ -427,9 +427,10 @@
                                 })
                         }
 
-                        hideMsg()
+                                hideMsg()
                     })
             }
+
 
             function init(){
                 //打开 actionSheet
@@ -519,27 +520,73 @@
 
 		};
 
-		var editList = function(id){
+		var editList = function( clerkId ){
+            var edit_list_data = {
+                isBound: false 
+            }		
 			//修改店员信息
             var i=0;
+            var list 
             if( ! clerk_list_data.section.length ) {
-                //TODO 调用api 获取 
-                return 
-            } else {
+                getDetail(null, function(){
+                       render() 
+                       })
+            } 
+            else {
+                list = clerk_list_data.section[0].list;
+                if (! matchClerkId(list)) {
+                    list = clerk_list_data.section[1].list;
+                    matchClerkId(list)
+                }
+            }
+            
+
+
+            function matchClerkId(list){
+                for(i=0; i<list.length; i++){
+                    if(list[i].clerkId === clerkId ){
+                        edit_list_data.isBound = list[i].isBound
+                        render()
+                        return true
+                    }
+                }
+                return false 
+            }
+
+            function render(){
+                var edit_list_html =  template('js-edit-list', edit_list_data);
+                document.getElementById('content').innerHTML = edit_list_html;
+                init()
+            }
+
+            function init(){
+                //跳转绑定页面 
+                $("#bindcard-button").click(function(){
+                    window.location.href = "#/bindCard/"+clerkId;
+                })
             
             }
-			var list = clerk_list_data.section[0].list;
-			for(i=0; i<list.length; i++){
-				if(list[i].clerkId == id){
-					var edit_list_data = {
-						isBound: list[i].isBound
-					}		
-					var edit_list_html =  template('js-edit-list', edit_list_data);
-					document.getElementById('content').innerHTML = edit_list_html;
-					return;
-				}
-			}
-			console.error("function:editList  "+id);
+
+            function getDetail(params, fn ) {
+                var url  =  "/api/detail_" + clerkId ;
+                var urlParams  = {}
+                if( params && params.date)  {
+                    urlParams.date =  params.date 
+                }
+
+                $.getJSON(url, urlParams,  function(data){
+                    if(data.error == 0){
+                        var i = 0
+                        edit_list_data.isBound = data.data.isBound ;
+
+                        if( fn instanceof Function ) {
+                            fn() 
+                        }
+                    }
+                })
+            }
+
+
 		}
 
 		var bindCard  = function(clerkId){
@@ -554,7 +601,7 @@
                     })
 
             function postData(){
-                var snNo = $('sn-no').value()
+                var snNo = $('.sn-no')[0].value
                 var url = '/api/bindCard'
                 var formObj = {
                     clerkId: clerkId,
@@ -573,7 +620,7 @@
 			'/list': list,
 			'/details/:id': details,
 			'/editList/:id': editList,
-			'/bindCard': bindCard,
+			'/bindCard/:id': bindCard,
 		}
 		var router = Router(routes);
 
