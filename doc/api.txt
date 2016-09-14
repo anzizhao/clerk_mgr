@@ -102,6 +102,7 @@
 				name: '王二'	, //店员姓名
 				order_num: 23, //订单数
     			money_num: 232.22, 	//实收金额	
+                isBound: true //是否绑定桌牌
 			}
 		}
 
