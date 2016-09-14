@@ -5,12 +5,18 @@ module.exports  = function(grunt) {
         run: {
             json: {
                  exec: 'npm run json',
+            },
+            killMockdata: {
+                exec: "ps -ef | grep 'json-server' |  awk '{print $2}'| xargs kill" 
+            },
+            mockdata: {
+                exec: "npm run server" 
             }
         },
         watch: {
-            json: {
-                files: 'mockdata.js',
-                tasks: ['run:json'],
+            mockdata: {
+                files: 'test/data/mockdata.js',
+                tasks: ['run:killMockdata', 'run:mockdata'],
                 options: {
                     atBegin: true,
                 }

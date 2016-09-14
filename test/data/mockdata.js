@@ -262,6 +262,7 @@ module.exports = function() {
                 ]
             }
         },
+
         detailList_123: {
             status: true,
             error: 0,
@@ -319,6 +320,7 @@ module.exports = function() {
                     },
                 ]
             }
+
         },
         detailList_124: {
             status: true,
@@ -378,5 +380,13 @@ module.exports = function() {
                 ]
             }
         },
+        bindCard: {
+            error: 0,
+            msg: '',
+        },
+        clerkDel: {
+            error: 0,
+            msg: '',
+        }
     }
 }
