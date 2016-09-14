@@ -332,6 +332,14 @@ a:focus {outline:none;-moz-outline:none;}
 		margin: 42px auto 0;
 		border-radius: 3px;
 	}
+	.disabled {
+		background-color: #ccc;
+		color: #eee;
+	}
+	.disabled:active {
+		background-color: #ccc;
+		color: #eee;
+	}
 	.btn-single {
 		display: inline-block;
 		height: 35px;

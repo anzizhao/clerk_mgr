@@ -150,7 +150,7 @@
 				<i class="tips-txt">每个商户号只能绑定一个帐号（请勿使用店主帐号所绑定的桌牌进行重复绑定）</i>
 			</div>
 			<div class="btn_group">
-				<div class="btn btn_save">保存</div>
+				<div class="btn btn_save disabled">保存</div>
 			</div>
 		</div>
 	</script>
@@ -594,11 +594,16 @@
 			var bind_card_html = template('js-bind-card', {});
 			document.getElementById('content').innerHTML = bind_card_html;
 
+            $(".sn-no").keyup(function(){
+                if($(this).val().trim() != ""){
+                    $(".btn_save").removeClass("disabled");
+                    $(".btn_save")[0].onclick = postData;
+                }else {
+                    $(".btn_save").addClass("disabled");
+                    $(".btn_save")[0].onclick = null;
+                }
+            });
 
-            $(".btn_save").click(function(e){
-                    e.preventDefault()
-                    postData() 
-                    })
 
             function postData(){
                 var snNo = $('.sn-no')[0].value
@@ -611,6 +616,9 @@
                         // 判断接口返回结果, 做出处理 
                         console.log(status)
                         console.dir(data) 
+                        // showMsg("请输入正确的商户号",1,"关闭");
+                        showMsg("该商户已绑定其他账号",1,"关闭");
+
                         }, 'json') 
             }
 		}
@@ -637,7 +645,7 @@
 	    	$('#single_btn,#double_btn').hide();
 	    	if(length == 1){
 		    	$('#single_btn').show();
-		    	$('#single_btn .btn-normal').text(btnName);
+		    	$('#single_btn .btn-normal').text(btnName).click(hideMsg);
 	    	}
 	    	if(length == 2){
 		    	$('#double_btn').show();
