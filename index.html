@@ -98,7 +98,7 @@
 				{{each main[i].details as item}}
 					<div class="list-item">
 						<div class="l">
-							<div class="l-name">[当面付]订单金额¥{{ item.orderAmount }}，商家优惠¥{{ item.coupon }}</div>
+                            <div class="l-name">[{{ item.payType }}]订单金额¥{{ item.orderAmount }}，商家优惠¥{{ item.coupon }}</div>
 							<div class="l-time">
 								<p>{{ item.time }}</p>
 							</div>

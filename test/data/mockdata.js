@@ -221,14 +221,16 @@ module.exports = function() {
                                 orderAmount: '25', 
                                 coupon: '0.4',
                                 paidIn: '123',
+                                payType: '当面付',
                                 time: '14:42:23'
                             },
                             {
                                 orderAmount: '125', 
                                 coupon: '10.4',
                                 paidIn: '223',
+                                payType: '当面付',
                                 time: '12:42:23'
-                        },
+                            },
 						]
 					},
 					{
@@ -239,12 +241,14 @@ module.exports = function() {
 								orderAmount: '25', 
 								coupon: '0.4',
 								paidIn: '123',
+                                payType: '当面付',
 								time: '14:42:23'
 							},
 							{
 								orderAmount: '25', 
 								coupon: '0.4',
 								paidIn: '123',
+                                payType: '微信支付',
 								time: '14:42:23'
 							},
 						]
@@ -257,6 +261,7 @@ module.exports = function() {
 								orderAmount: '205', 
 								coupon: '20.4',
 								paidIn: '223',
+                                payType: '当面付',
 								time: '10:42:23'
 							},
 						]
@@ -280,18 +285,21 @@ module.exports = function() {
                                 orderAmount: '205', 
                                 coupon: '20.4',
                                 paidIn: '223',
+                                payType: '当面付',
                                 time: '10:42:23'
                             },
                             {
                                 orderAmount: '25', 
                                 coupon: '0.4',
                                 paidIn: '123',
+                                payType: '当面付',
                                 time: '14:42:23'
                             },
                             {
                                 orderAmount: '125', 
                                 coupon: '10.4',
                                 paidIn: '223',
+                                payType: '当面付',
                                 time: '12:42:23'
                             },
                         ]
@@ -304,18 +312,21 @@ module.exports = function() {
                                 orderAmount: '205', 
                                 coupon: '20.4',
                                 paidIn: '223',
+                                payType: '当面付',
                                 time: '10:42:23'
                             },
                             {
                                 orderAmount: '25', 
                                 coupon: '0.4',
                                 paidIn: '123',
+                                payType: '当面付',
                                 time: '14:42:23'
                             },
                             {
                                 orderAmount: '125', 
                                 coupon: '10.4',
                                 paidIn: '223',
+                                payType: '当面付',
                                 time: '12:42:23'
                             },
                         ]
@@ -339,18 +350,21 @@ module.exports = function() {
                                 orderAmount: '205', 
                                 coupon: '20.4',
                                 paidIn: '223',
+                                payType: '当面付',
                                 time: '10:42:23'
                             },
                             {
                                 orderAmount: '25', 
                                 coupon: '0.4',
                                 paidIn: '123',
+                                payType: '当面付',
                                 time: '14:42:23'
                             },
                             {
                                 orderAmount: '125', 
                                 coupon: '10.4',
                                 paidIn: '223',
+                                payType: '当面付',
                                 time: '12:42:23'
                             },
                         ]
@@ -363,18 +377,21 @@ module.exports = function() {
                                 orderAmount: '205', 
                                 coupon: '20.4',
                                 paidIn: '223',
+                                payType: '当面付',
                                 time: '10:42:23'
                             },
                             {
                                 orderAmount: '25', 
                                 coupon: '0.4',
                                 paidIn: '123',
+                                payType: '当面付',
                                 time: '14:42:23'
                             },
                             {
                                 orderAmount: '125', 
                                 coupon: '10.4',
                                 paidIn: '223',
+                                payType: '支付宝支付',
                                 time: '12:42:23'
                             },
                         ]
