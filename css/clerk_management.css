@@ -396,6 +396,12 @@ a:focus {
   width: 90%;
   margin: 42px auto 0;
   border-radius: 3px; }
+.btn_group .disabled {
+  background-color: #ccc;
+  color: #eee; }
+.btn_group .disabled:active {
+  background-color: #ccc;
+  color: #eee; }
 .btn_group .btn-single {
   display: inline-block;
   height: 35px;
