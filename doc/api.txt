@@ -16,7 +16,7 @@
 			error: 0,
 			msg: '',
 			data: {
-				main: [
+                section: [
 			    	{
 			    		title: '店员',
 			    		eleId: true,
@@ -113,6 +113,7 @@
 			error: 0,
 			msg: '',
 			data: {
+                status: true //true: 有更多数据 false: 没有更多数据
 				"list": [
 					{
 						"date": "2012年03月12日", 
@@ -128,7 +129,6 @@
 					}
 				]
 			},
-			status: true //true: 有更多数据 false: 没有更多数据
 		}
 
 
