@@ -42,7 +42,8 @@
 						<li class="item">
 							<div class="btn_edit list_item_edit" data-id="{{entry.clerkId}}">编辑资料</div>
 							<div class="btn_del list_item_del" data-id="{{entry.clerkId}}" >删除</div>
-                            <a href="{{'#/details/' + entry.clerkId }}" class="clerk-item">
+                            <!--<a href="{{'#/details/' + entry.clerkId }}" class="clerk-item">-->
+                            <a href="javascript:void(0)" class="clerk-item">
 								<span class="name">{{ entry.name }}</span>
 								<p class="item-bottom">
 									<span class="order_num icons">{{ entry.order_num }}笔</span>
@@ -194,6 +195,9 @@
 	<script type="text/javascript">
         // 全局数据
 		// 店员管理首页
+        // TODO
+        var gStoreId = '2222';
+
 		var clerk_list_data = {
 			time: [],
 			section: []
@@ -215,39 +219,12 @@
             // 操作状态
             opState.list.timSelect =  null
 
-			$.getJSON( dateUrl, function(data){
-				if(data.error == 0){
-					clerk_list_data.time = data.data.time;
-                    apiStatus.date = true
-                    shouldRender();
-				}
-			})
+            // 上面动态获取,改为渲染
+            // TODO
+            clerk_list_data.time = ;
+            clerk_list_data.seyction = ;
+            render()
 
-
-            getList(null,function(){
-                    apiStatus.list = true ;
-                    shouldRender();
-                })
-
-            function getList(params, fn){
-                var url 
-                var urlObj = {}
-                if( params &&  params.date ) {
-                    urlObj = {
-                        date: params.date 
-                    }
-                }
-
-                $.getJSON( listUrl, urlObj, function(data) {
-                    if(data.error == 0){
-                        clerk_list_data.section = data.data.section;
-                        if( fn instanceof Function ) {
-                            fn() 
-                        }
-                    }
-                });
-            
-            }
             // 渲染list 页面 
             function render(){
                 var clerk_list_html = template('js-clerk_list', clerk_list_data);
@@ -306,253 +283,14 @@
 
 		};
 
-		var details = function (clerkId) { 
-            //初始化状态
-            var clerk_details_data  =  {
-                entry : null, 
-                main: [],
-                clerkId: clerkId,
-                date: 1,
-            } 
-            var apiStatus = {
-                detail: false, 
-                detailList: false,
-            }
-
-            // 获取页面数据
-            var params = null
-            var timeSelect = opState.list.timeSelect
-            if( timeSelect  ) {
-                params = {
-                    date: timeSelect 
-                }; 
-                clerk_details_data.date = timeSelect 
-            }
-
-            getDetail(params, function(){
-                        // 获取数据后  渲染页面
-                        apiStatus.detail = true
-                        shouldRender()
-                    })
-
-            getDetailList(params, function(){
-                        apiStatus.detailList = true
-                        shouldRender()
-                    })
-
-            function shouldRender(){
-                if( apiStatus.detail && apiStatus.detailList ) {
-                    render() 
-                    initInfiniteScroll()
-                } 
-            }
-
-            // 渲染detail页面 
-            function render(){
-                var clerk_details_html = template('js-clerk_details', clerk_details_data);
-                document.getElementById('content').innerHTML = clerk_details_html;
-
-                init();
-            }
-
-            function renderMoreData(data) {
-                var i = 0;
-                var j = 0;
-                var len = data.list.length;
-                var db = clerk_details_data.main 
-                var dbLen  = db.length 
-                //特殊处理第一个  查看是否接着上一个日期
-                if(  dbLen && db[dbLen-1].date === data.list[i].date ) {
-                    data.list[i].details.forEach(function(item){
-                            db[dbLen-1].details.push( item ) 
-                            })
-                } else {
-                    db.push( data.list[i] ) 
-                }
-                for( i=1; i<len; i++) {
-                    db.push( data.list[i] ) 
-                }
-
-                render()
-            }
-
-            function getDetail(params, fn ) {
-                var url  =  "/api/detail/" + clerkId ;
-                var urlParams  = {}
-                if( params && params.date)  {
-                    urlParams.date =  params.date 
-                }
-
-                $.getJSON(url, urlParams,  function(data){
-                    if(data.error == 0){
-                        clerk_details_data.entry = data.data;
-                        if( fn instanceof Function ) {
-                            fn() 
-                        }
-                    }
-                })
-            }
-            function getDetailList(params, fn) {
-                var url  =  "/api/detail/" + clerkId +  "/list"  ;
-                var urlParams  = {}
-                if( params && params.date)  {
-                    urlParams.date =  params.date 
-                }
-
-                $.getJSON(url, urlParams, function(data){
-                    if(data.error === 0){
-                        data.data.list.forEach(function(item){
-                            clerk_details_data.main.push(item);
-
-                            })
-                        // clerk_details_data.main.push(data.data);
-                        if( fn instanceof Function ) {
-                            fn() 
-                        }
-                    }
-                })
-            
-            }
-			
-            function delClerk(){
-                // var clerkId = clerkId
-                var url = '/api/clerkDel'
-                $.post(url, { clerkId: clerkId}, function(data){
-                        //TODO 根据删除结果  做处理 
-                        var params = {  date: opState.list.timeSelect  }
-                        if( data.error === 0 ) {
-                            getList(params, function(){
-                                    render();
-                                    // 重新选中
-                                    $("#js-select-date").val( opState.list.timeSelect )
-                                })
-                        }
-
-                                hideMsg()
-                    })
-            }
-
-
-            function init(){
-                //打开 actionSheet
-                var mask = $('#mask');
-                var weuiActionsheet = $('#weui_actionsheet');
-
-                $("#js-ico-setup").click(function(){
-                    showActionSheet( weuiActionsheet, mask );
-                });
-
-                $('#actionsheet_cancel').on('click', function () {
-                    hideActionSheet(weuiActionsheet, mask);
-                });
-
-                //跳转 编辑店员信息
-                $("#js-actionsheet-editList").click(function(){
-                    var id = clerk_details_data.entry.clerkId;
-                    window.location.href = "#/editList/"+id;
-                })
-
-                $("#js-del-clerk").click(function(){
-                    hideActionSheet(weuiActionsheet, mask);
-                    showMsg("删除店员后，该账号将无法再登录，<br>且不能以同样的账号再添加店员，<br>确认删除吗？", 2, null, delClerk)
-
-                });
-            }
-
-            function initInfiniteScroll(){
-                $('#masonny-div').infinitescroll({
-                    state: {
-                        currPage: 1    // 当前的页面 从2开始
-                    },
-                    navSelector  : "#navigation",   // 页面分页元素(成功后会被隐藏)
-                    nextSelector : "#navigation a", // 需要点击的下一页链接，和2的html要对应
-                    itemSelector : ".clerk-details-list"  , // ajax回来之后，每一项的selecter
-                                              //（比如每篇文章都有item这个class）
-                    debug: true, //启用调试信息
-                    animate: false, //当有新数据加载进来的时候，页面是否有动画效果，默认没有
-                    extraScrollPx: 150, //滚动条距离底部多少像素的时候开始加载，默认150
-                    bufferPx: 40, //载入信息的显示时间，时间越大，载入信息显示时间越短
-                    errorCallback: function(errorType) {
-                        if( errorType === 'done'){
-                            console.log('done')
-                            //TODO 
-                            // finish 
-                        }
-                    }, //当出错的时候，比如404页面的时候执行的函数
-                    appendCallback: false,
-                    pathParse: function(path, page){
-                        var searchStr = 'page='
-                        var pathComs = path.split( searchStr )
-                        pathComs[0] +=  searchStr
-                        pathComs[1] = ''
-                        return pathComs 
-                    },
-                    localMode: true, //是否允许载入具有相同函数的页面，默认为false
-                    dataType: 'json',//可以是json
-                    loading: {
-                        img: "img/loading.gif",
-                        msgText: "",
-                        finishedMsg: '没有更多记录了',
-                        selector: '.loading', // 显示loading信息的div
-                    }
-                },function(retData, opt ) {
-                    //程序执行完的回调函数
-                    renderMoreData( retData.data )
-                    //获取数据完成, 解除绑定 
-                    if( ! retData.data.status )  {
-                        $(window).unbind('.infscr')
-                    }
-                })
-            }
-
-
-            function showActionSheet( weuiActionsheet, mask ){
-            	weuiActionsheet.addClass('weui_actionsheet_toggle');
-	            mask.show().focus()//加focus是为了触发一次页面的重排(reflow or layout thrashing),使mask的transition动画得以正常触发
-	                .addClass('weui_fade_toggle').one('click', function () {
-		                hideActionSheet(weuiActionsheet, mask);
-		            });
-        	}
-            
-            function hideActionSheet(weuiActionsheet, mask) {
-                weuiActionsheet.removeClass('weui_actionsheet_toggle');
-                mask.hide().removeClass('weui_fade_toggle');
-            }
-
-		};
-
 		var editList = function( clerkId ){
             var edit_list_data = {
                 isBound: false 
             }		
 			//修改店员信息
-            var i=0;
-            var list 
-            if( ! clerk_list_data.section.length ) {
-                getDetail(null, function(){
-                       render() 
-                       })
-            } 
-            else {
-                list = clerk_list_data.section[0].list;
-                if (! matchClerkId(list)) {
-                    list = clerk_list_data.section[1].list;
-                    matchClerkId(list)
-                }
-            }
-            
-
-
-            function matchClerkId(list){
-                for(i=0; i<list.length; i++){
-                    if(list[i].clerkId === clerkId ){
-                        edit_list_data.isBound = list[i].isBound
-                        render()
-                        return true
-                    }
-                }
-                return false 
-            }
+            getBoundInfo (null, function(){
+                    render() 
+                    })
 
             function render(){
                 var edit_list_html =  template('js-edit-list', edit_list_data);
@@ -568,18 +306,18 @@
             
             }
 
-            function getDetail(params, fn ) {
+            function getBoundInfo (params, fn ) {
                 var url  =  "/api/detail/" + clerkId ;
                 var urlParams  = {}
                 if( params && params.date)  {
-                    urlParams.date =  params.date 
+                    urlParams.store_id = gStoreId //店铺ID
+                    urlParams.member_id = clerkId 
                 }
 
                 $.getJSON(url, urlParams,  function(data){
                     if(data.error == 0){
                         var i = 0
-                        edit_list_data.isBound = data.data.isBound ;
-
+                        edit_list_data.isBound = data.data.status ;
                         if( fn instanceof Function ) {
                             fn() 
                         }
@@ -610,8 +348,9 @@
                 var snNo = $('.sn-no')[0].value
                 var url = '/api/bindCard'
                 var formObj = {
-                    clerkId: clerkId,
-                    shopNo: snNo,
+                    store_id : gStoreId, //店铺ID
+                    member_id : clerkId ,
+                    sn: snNo,
                 }
                 $.post(url, formObj ,function(data, status){
                         // showMsg("请输入正确的商户号",1,"关闭");
@@ -624,7 +363,7 @@
 		// 路由配置
 		var routes = {
 			'/list': list,
-			'/details/:id': details,
+        //    '/details/:id': details,
 			'/editList/:id': editList,
 			'/bindCard/:id': bindCard,
 		}
