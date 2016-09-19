@@ -11,6 +11,9 @@ module.exports  = function(grunt) {
             },
             mockdata: {
                 exec: "npm run server" 
+            },
+            tar: {
+                exec: "tar -zcf clerk.tar.gz  index.html css js img test" 
             }
         },
         watch: {
