@@ -206,8 +206,14 @@
 		var list = function () { 
             // 初始化状态
             // api 的状态
-            var listUrl = '//localhost:6330/list'
-            var dateUrl = '//localhost:6330/date'
+             var listUrl = '//localhost:6330/list'
+             var dateUrl = '//localhost:6330/date'
+             var delUrl = '//localhost:6330/clerkDel'
+             /*
+            var listUrl = '/api/list'
+            var dateUrl = '/api/date'
+            var delUrl = '/api/clerkDel'
+            */
             var apiStatus = {
                 date: false, 
                 list: false,
@@ -261,8 +267,8 @@
             }
             function wrapDelClerk(clerkId){
                 function delClerk(){
-                    var url = '/api/clerkDel'
-                    $.post(url, { clerkId: clerkId}, function(data){
+                    // var url = '/api/clerkDel'
+                    $.post(delUrl, { clerkId: clerkId}, function(data){
                             //TODO 根据删除结果  做处理 
                             var params = {  date: opState.list.timeSelect  }
                             if( data.error === 0 ) {

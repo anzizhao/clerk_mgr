@@ -8,6 +8,7 @@
     "json": "node jsonFileToStr.js",
     "start": "anywhere -p 8373",
     "server":  "json-server ./test/data/mockdata.js --port 6330 --routes  ./test/data/routes.json --middlewares ./test/data/middleware.js ",
+    "server":  "json-server --nc ./test/data/mockdata.js --port 6330 --routes  ./test/data/routes.json --middlewares ./test/data/middleware.js ",
     "debugServer":  "node debug json-server path ./test/data/mockdata.js --port 6330 --routes  ./test/data/routes.json --middlewares ./test/data/middleware.js ",
     "watch": "grunt watch:json"
   },
